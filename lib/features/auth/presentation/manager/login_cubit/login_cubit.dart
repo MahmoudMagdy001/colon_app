@@ -25,41 +25,29 @@ class LoginCubit extends Cubit<LoginState> {
       await supabase.auth.signInWithPassword(
         email: email,
         password: password,
-        
       );
       emit(LoginSuccess());
       GoRouter.of(context).go(AppRouter.kNewsView);
     } on AuthException catch (e) {
-      if (e.message == 'user_not_found') {
+      if (e.message == 'Invalid login credentials') {
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return const CustomAlert(
               title: 'Login',
-              content: 'user not found',
-            );
-          },
-        );
-        emit(const LoginFailure(errorMessage: 'No user found for that email.'));
-      } else if (e.message == 'Invalid_credentials') {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return const CustomAlert(
-              title: 'Login',
-              content: 'wrong password',
+              content: 'Email or Password is Wrong.',
             );
           },
         );
         emit(const LoginFailure(
             errorMessage: 'Wrong password provided for that user.'));
-      } else if (e.message == 'Email_not_confirmed') {
+      } else if (e.message == 'Email not confirmed') {
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return const CustomAlert(
               title: 'Login',
-              content: 'Please confirm your account',
+              content: 'Please check your email and confirm your account.',
             );
           },
         );

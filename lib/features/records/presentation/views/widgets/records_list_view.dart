@@ -26,12 +26,6 @@ class _RecordsListViewState extends State<RecordsListView> {
     return data;
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getAllPatientsByDoctorEmail('${supabase.auth.currentUser?.email}');
-  // }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<dynamic>>(
@@ -75,8 +69,8 @@ class _RecordsListViewState extends State<RecordsListView> {
                   },
                   child: ListTile(
                     trailing: IconButton(
-                      onPressed: () {
-                        showDialog(
+                      onPressed: () async {
+                        await showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
@@ -97,8 +91,8 @@ class _RecordsListViewState extends State<RecordsListView> {
                                     "Yes",
                                     style: TextStyle(color: Colors.red),
                                   ),
-                                  onPressed: () {
-                                    context
+                                  onPressed: () async {
+                                    await context
                                         .read<PatientCubit>()
                                         .deletePatient(doctor['p_id']);
                                     setState(() {});
@@ -109,6 +103,7 @@ class _RecordsListViewState extends State<RecordsListView> {
                             );
                           },
                         );
+                        setState(() {});
                       },
                       icon: const Icon(
                         Icons.delete,

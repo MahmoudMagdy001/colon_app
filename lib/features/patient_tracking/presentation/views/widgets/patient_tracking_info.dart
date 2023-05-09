@@ -27,12 +27,6 @@ class _PatientTrackingInfoState extends State<PatientTrackingInfo> {
     return data;
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getAllDrugsByDoctorEmail('${supabase.auth.currentUser?.email}');
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

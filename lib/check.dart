@@ -1,8 +1,10 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:colon_app/core/utlis/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-// import 'package:supabase_quickstart/constants.dart';
+import 'core/widgets/custom_loading_indicator.dart';
 
 final supabase = Supabase.instance.client;
 
@@ -40,7 +42,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
+      body: Center(child: CustomLoadingIndicator()),
     );
   }
 }

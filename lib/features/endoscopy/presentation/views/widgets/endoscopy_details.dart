@@ -60,14 +60,24 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                           SizedBox(
                             width: 100,
                             height: 58,
-                            child: CustomButton(
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                              text: 'Reset'.toUpperCase(),
+                            child: IconButton(
                               onPressed: () {
                                 resetImage();
                               },
+                              icon: const Icon(
+                                Icons.restart_alt,
+                                size: 50,
+                                color: Colors.red,
+                              ),
                             ),
+                            //  CustomButton(
+                            //   backgroundColor: Colors.red,
+                            //   textColor: Colors.white,
+                            //   text: 'Reset'.toUpperCase(),
+                            //   onPressed: () {
+                            //     resetImage();
+                            //   },
+                            // ),
                           ),
                         ],
                       ),

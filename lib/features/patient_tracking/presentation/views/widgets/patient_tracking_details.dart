@@ -1,3 +1,4 @@
+
 import 'package:colon_app/features/patient_tracking/presentation/views/widgets/patient_tracking_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -28,20 +29,6 @@ class _PatientTrackingDetailsState extends State<PatientTrackingDetails> {
     await supabase
         .rpc('delete_drug_info_for_patient', params: {'p_id_input': id});
   }
-  // Future<List<dynamic>> getAllDrugsByDoctorEmail(String docEmail) async {
-  //   final data = await supabase.rpc('get_all_drug_info_for_patients',
-  //       params: {'doc_email_input': docEmail});
-  //   if (kDebugMode) {
-  //     print(data);
-  //   }
-  //   return data;
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getAllPatientsByDoctorEmail('${supabase.auth.currentUser?.email}');
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -78,14 +65,14 @@ class _PatientTrackingDetailsState extends State<PatientTrackingDetails> {
               child: Card(
                 child: ListTile(
                   trailing: IconButton(
-                    onPressed: () {
-                      showDialog(
+                    onPressed: () async {
+                      await showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text("Delete Patient"),
+                            title: const Text("Delete Drug"),
                             content: Text(
-                                "Are you sure you want to delete ${data[index]['p_name']} ?"),
+                                "Are you sure you want to delete drug for ${data[index]['p_name']} ?"),
                             actions: [
                               TextButton(
                                 child: const Text(
@@ -110,6 +97,7 @@ class _PatientTrackingDetailsState extends State<PatientTrackingDetails> {
                           );
                         },
                       );
+                      setState(() {});
                     },
                     icon: const Icon(
                       Icons.delete,

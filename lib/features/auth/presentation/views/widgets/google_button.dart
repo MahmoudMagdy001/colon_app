@@ -1,48 +1,6 @@
-// import 'package:flutter/material.dart';
-// import 'package:go_router/go_router.dart';
-// import 'package:supabase_flutter/supabase_flutter.dart';
-
-// import '../../../../../core/utlis/app_router.dart';
-
-// final supabase = Supabase.instance.client;
-
-// class GoogleButton extends StatefulWidget {
-//   const GoogleButton({super.key});
-
-//   @override
-//   State<GoogleButton> createState() => _GoogleButtonState();
 // }
+// ignore_for_file: library_private_types_in_public_api
 
-// class _GoogleButtonState extends State<GoogleButton> {
-//   bool _isLoading = false;
-
-//   Future<void> _signInWithGoogle() async {
-//     setState(() {
-//       _isLoading = true;
-//     });
-//     try {
-//       await supabase.auth.signInWithOAuth(Provider.google);
-//       GoRouter.of(context).go(AppRouter.kNewsView);
-//     } on AuthException catch (error) {
-//       ScaffoldMessenger(child: SnackBar(content: Text(error.message)));
-//     } catch (error) {
-//       const ScaffoldMessenger(
-//           child: SnackBar(content: Text('Unexpected error occurred')));
-//     }
-
-//     setState(() {
-//       _isLoading = false;
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return ElevatedButton(
-//       onPressed: _isLoading ? null : _signInWithGoogle,
-//       child: Text(_isLoading ? 'Loading' : 'Sign in with Google'),
-//     );
-//   }
-// }
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -67,7 +25,7 @@ class _GoogleButtonState extends State<GoogleButton> {
   late final TextEditingController _emailController;
   late final StreamSubscription<AuthState> _authStateSubscription;
 
-  Future<void> _signIn() async {
+  Future<void> signIn() async {
     setState(() {
       _isLoading = true;
     });
@@ -97,7 +55,9 @@ class _GoogleButtonState extends State<GoogleButton> {
       _isLoading = true;
     });
     try {
-      await supabase.auth.signInWithOAuth(Provider.google,);
+      await supabase.auth.signInWithOAuth(
+        Provider.google,
+      );
       if (mounted) {
         GoRouter.of(context).go(AppRouter.kNewsView);
       }
