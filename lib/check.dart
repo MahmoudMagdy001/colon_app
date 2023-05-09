@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:colon_app/core/utlis/app_router.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -17,11 +18,26 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   bool _redirectCalled = false;
+  String? _connectionStatus;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _redirect();
+  void initState() {
+    super.initState();
+    _checkInternetConnection();
+  }
+
+  Future<void> _checkInternetConnection() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _connectionStatus = 'No Internet';
+      });
+    } else {
+      setState(() {
+        _connectionStatus = 'Connected';
+      });
+      _redirect();
+    }
   }
 
   Future<void> _redirect() async {
