@@ -1,4 +1,3 @@
-
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:colon_app/features/patient_tracking/presentation/views/widgets/patient_tracking_info.dart';
@@ -61,57 +60,66 @@ class _PatientTrackingDetailsState extends State<PatientTrackingDetails> {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => PatientTrackingInfo(
-                      id: data[index]['p_id'], name: data[index]['p_name']),
+                      iD: data[index]['p_id'], name: data[index]['p_name']),
                 ));
               },
               child: Card(
-                child: ListTile(
-                  trailing: IconButton(
-                    onPressed: () async {
-                      await showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text("Delete Drug"),
-                            content: Text(
-                                "Are you sure you want to delete drug for ${data[index]['p_name']} ?"),
-                            actions: [
-                              TextButton(
-                                child: const Text(
-                                  "No",
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: ListTile(
+                    trailing: IconButton(
+                      onPressed: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Delete Drug"),
+                              content: Text(
+                                  "Are you sure you want to delete drug for ${data[index]['p_name']} ?"),
+                              actions: [
+                                TextButton(
+                                  child: const Text(
+                                    "No",
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
                                 ),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              TextButton(
-                                child: const Text(
-                                  "Yes",
-                                  style: TextStyle(color: Colors.red),
+                                TextButton(
+                                  child: const Text(
+                                    "Yes",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  onPressed: () async {
+                                    await deleteDrug(data[index]['p_id']);
+                                    setState(() {});
+                                    Navigator.of(context).pop();
+                                  },
                                 ),
-                                onPressed: () async {
-                                  await deleteDrug(data[index]['p_id']);
-                                  setState(() {});
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                      setState(() {});
-                    },
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                      size: 25,
+                              ],
+                            );
+                          },
+                        );
+                        setState(() {});
+                      },
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                        size: 25,
+                      ),
                     ),
-                  ),
-                  title: Row(
-                    children: [
-                      Text('${data[index]['p_id']} - '),
-                      Text(data[index]['p_name']),
-                    ],
+                    title: Row(
+                      children: [
+                        Text(
+                          '${data[index]['p_id']} - ',
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                        Text(
+                          data[index]['p_name'],
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

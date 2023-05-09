@@ -83,7 +83,6 @@ class _AddPatientTrackingState extends State<AddPatientTracking> {
     }
     return data;
   }
-  
 
   String? _selectedName;
   int? selectedAge;
@@ -264,7 +263,7 @@ class _AddPatientTrackingState extends State<AddPatientTracking> {
                                 },
                                 validator: (value) {
                                   if (value == null) {
-                                    return 'Please select an AJCC stage';
+                                    return 'Please select AJCC';
                                   }
                                   return null;
                                 },
@@ -406,19 +405,21 @@ class _AddPatientTrackingState extends State<AddPatientTracking> {
                                       backgroundColor: kButtonColor,
                                       text: 'submt'.toUpperCase(),
                                       onPressed: () async {
-                                        await BlocProvider.of<
-                                                PatientTrackingCubit>(context)
-                                            .addDrug(
-                                          selectedID,
-                                          _drugController.text.trim(),
-                                          double.parse(
-                                              _doseController.text.trim()),
-                                          _ajccStage,
-                                          _tnm,
-                                          _grade,
-                                          _notesController.text.trim(),
-                                          context,
-                                        );
+                                        if (_formKey.currentState!.validate()) {
+                                          await BlocProvider.of<
+                                                  PatientTrackingCubit>(context)
+                                              .addDrug(
+                                            selectedID,
+                                            _drugController.text.trim(),
+                                            double.parse(
+                                                _doseController.text.trim()),
+                                            _ajccStage,
+                                            _tnm,
+                                            _grade,
+                                            _notesController.text.trim(),
+                                            context,
+                                          );
+                                        }
                                       },
                                       textColor: Colors.white);
                                 },
