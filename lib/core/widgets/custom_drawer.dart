@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:colon_app/core/widgets/user_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,6 +25,7 @@ bool _recordsSelected = false;
 bool _geneExpressionSelected = false;
 bool _tumorMarkerSelected = false;
 bool _patientTrackingSelected = false;
+bool _statSelected = false;
 
 String? email = supabase.auth.currentUser!.email;
 List<String> emailParts = email!.split("@");
@@ -55,6 +54,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 _geneExpressionSelected = false;
                 _tumorMarkerSelected = false;
                 _patientTrackingSelected = false;
+                _statSelected = false;
               });
               GoRouter.of(context).go(AppRouter.kNewsView);
             },
@@ -72,6 +72,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 _geneExpressionSelected = false;
                 _tumorMarkerSelected = false;
                 _patientTrackingSelected = false;
+                _statSelected = false;
               });
               GoRouter.of(context).go(AppRouter.kEndoscopyView);
             },
@@ -89,6 +90,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 _geneExpressionSelected = false;
                 _tumorMarkerSelected = false;
                 _patientTrackingSelected = false;
+                _statSelected = false;
               });
               GoRouter.of(context).go(AppRouter.kHistopathologyView);
             },
@@ -106,6 +108,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 _geneExpressionSelected = false;
                 _tumorMarkerSelected = false;
                 _patientTrackingSelected = false;
+                _statSelected = false;
               });
               GoRouter.of(context).go(AppRouter.kRecordsView);
             },
@@ -123,6 +126,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 _geneExpressionSelected = true;
                 _tumorMarkerSelected = false;
                 _patientTrackingSelected = false;
+                _statSelected = false;
               });
               GoRouter.of(context).go(AppRouter.kGeneExpressionView);
             },
@@ -140,6 +144,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 _geneExpressionSelected = false;
                 _tumorMarkerSelected = true;
                 _patientTrackingSelected = false;
+                _statSelected = false;
               });
               GoRouter.of(context).go(AppRouter.kTumorMarkerView);
             },
@@ -157,8 +162,27 @@ class _MyDrawerState extends State<MyDrawer> {
                 _geneExpressionSelected = false;
                 _tumorMarkerSelected = false;
                 _patientTrackingSelected = true;
+                _statSelected = false;
               });
               GoRouter.of(context).go(AppRouter.kPatientTrachingView);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.query_stats),
+            title: const Text('Statistics'),
+            selected: _statSelected,
+            onTap: () {
+              setState(() {
+                _newsSelected = false;
+                _endoscopySelected = false;
+                _histopathologySelected = false;
+                _recordsSelected = false;
+                _geneExpressionSelected = false;
+                _tumorMarkerSelected = false;
+                _patientTrackingSelected = false;
+                _statSelected = true;
+              });
+              GoRouter.of(context).go(AppRouter.kStatisticsView);
             },
           ),
           const Divider(
@@ -188,6 +212,8 @@ class _MyDrawerState extends State<MyDrawer> {
                     _recordsSelected = false;
                     _geneExpressionSelected = false;
                     _tumorMarkerSelected = false;
+                    _patientTrackingSelected = false;
+                    _statSelected = false;
                   });
                 },
               );

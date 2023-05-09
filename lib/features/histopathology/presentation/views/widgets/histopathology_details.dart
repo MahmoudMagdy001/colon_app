@@ -74,14 +74,7 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
                                 color: Colors.red,
                               ),
                             ),
-                            // CustomButton(
-                            //   backgroundColor: Colors.red,
-                            //   textColor: Colors.white,
-                            //   text: 'Reset'.toUpperCase(),
-                            //   onPressed: () {
-                            //     resetImage();
-                            //   },
-                            // ),
+                           
                           ),
                         ],
                       ),

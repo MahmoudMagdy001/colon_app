@@ -1,4 +1,5 @@
 import 'package:colon_app/core/utlis/styles.dart';
+import 'package:colon_app/core/widgets/custom_divider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -76,7 +77,8 @@ class _PatientTrackingInfoState extends State<PatientTrackingInfo> {
             itemBuilder: (context, index) {
               return Card(
                 child: Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Column(
                     children: [
                       Row(
@@ -84,53 +86,105 @@ class _PatientTrackingInfoState extends State<PatientTrackingInfo> {
                         children: [
                           Text(
                             'Submit Date: ${data[index]['info_submit_date']}',
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                          Text(
-                            'Grade: ${data[index]['grade']}',
-                            style: const TextStyle(fontSize: 18),
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600),
                           ),
                         ],
                       ),
+                      const CustomDivider(),
                       const SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 60),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Drug: ${data[index]['drug']}',
-                              style: const TextStyle(fontSize: 18),
-                            ),
-                            Text(
-                              'Dose: ${data[index]['dose'].toString()}',
-                              style: const TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Drug',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            data[index]['drug'],
+                            style: const TextStyle(fontSize: 18),
+                          )
+                        ],
                       ),
-                      const SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'AJCC Stage: ${data[index]['ajcc_stage']}',
-                              style: const TextStyle(fontSize: 18),
-                            ),
-                            Text(
-                              'TNM: ${data[index]['tnm']}',
-                              style: const TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Dose',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            data[index]['dose'].toString(),
+                            style: const TextStyle(fontSize: 18),
+                          )
+                        ],
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'AJCC Stage',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            data[index]['ajcc_stage'],
+                            style: const TextStyle(fontSize: 18),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'TNM',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            data[index]['tnm'],
+                            style: const TextStyle(fontSize: 18),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Grade',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            data[index]['grade'],
+                            style: const TextStyle(fontSize: 18),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 10),
                       if (data[index]['notes'] != '')
-                        Text(
-                          'Notes: ${data[index]['notes']}',
-                          style: const TextStyle(fontSize: 18),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Notes:',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w600),
+                            ),
+                            const SizedBox(width: 5),
+                            Expanded(
+                              child: Text(
+                                data[index]['notes'],
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                            ),
+                          ],
                         )
                       else
                         Container()
