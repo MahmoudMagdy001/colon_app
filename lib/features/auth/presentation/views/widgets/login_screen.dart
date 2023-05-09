@@ -34,6 +34,11 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  Future signInGoogle(String key, String url) async {
+    final supabase1 = SupabaseClient(url, key);
+    await supabase.auth.signInWithOAuth(Provider.google);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +93,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               const SizedBox(height: 10),
                               // const CustomDivider(),
                               // const SizedBox(height: 10),
-                              // const GoogleButton(),
+                              // ElevatedButton(
+                              //     onPressed: () async {
+                              //       signInGoogle(
+                              //           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlyZ3djcWlneHZleGVyY3ZoaHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODIwMTUwNzUsImV4cCI6MTk5NzU5MTA3NX0.n1jvJ8k-pUZtdA9OzrRyNBcJQ_FheFMoNTud3aBVK2Q',
+                              //           'https://yrgwcqigxvexercvhhzr.supabase.co');
+                              //     },
+                              //     child: const Text("Sign in with Google"))
                             ],
                           ),
                         );
