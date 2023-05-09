@@ -3,6 +3,7 @@ import 'package:colon_app/features/patient_tracking/presentation/views/widgets/a
 import 'package:go_router/go_router.dart';
 
 import '../../check.dart';
+import '../../check_internet.dart';
 import '../../features/auth/presentation/views/auth_view.dart';
 import '../../features/auth/presentation/views/widgets/forget_password.dart';
 import '../../features/auth/presentation/views/widgets/login_screen.dart';
@@ -21,6 +22,7 @@ abstract class AppRouter {
   static const kLayout = '/layout';
 
   static const kOnboardingView = '/onboardingview';
+  static const kSplashView = '/splashview';
   static const kAuthView = '/authview';
   static const kLoginScreen = '/loginscreen';
   static const kSignpScreen = '/signupscreen';
@@ -41,6 +43,10 @@ abstract class AppRouter {
     routes: [
       GoRoute(
         path: '/',
+        builder: (context, state) => const CheckInternet(),
+      ),
+      GoRoute(
+        path: kSplashView,
         builder: (context, state) => const SplashPage(),
       ),
       GoRoute(
