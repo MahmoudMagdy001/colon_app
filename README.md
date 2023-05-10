@@ -17,7 +17,7 @@ flutter clean
 
 flutter pub get
 
-flutter pub run flutter_launcher_icons:main
+flutter pub run flutter_launcher_icons
 
 ## Contributors 
 
@@ -33,7 +33,7 @@ flutter pub run flutter_launcher_icons:main
  - patient drug tracking and view details
 
  ## Permissions
- 
+
  On Android versions prior to Android 6.0, Colon Cancer Diagnosis App requires the following permissions:
 
  - Full Network Access
