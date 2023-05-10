@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:colon_app/core/widgets/custom_loading_indicator.dart';
 import 'package:colon_app/core/widgets/custom_sizedbox.dart';
 import 'package:colon_app/features/tumor_marker/presentation/manager/cubit/tumor_cubit.dart';
@@ -416,7 +418,28 @@ class _TumorDetailsState extends State<TumorDetails> {
                       result3,
                       result4,
                     );
-                    clearTexts();
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Add Tumor"),
+                          content: const Text("Tumor Add Successfully."),
+                          actions: [
+                            TextButton(
+                              child: const Text(
+                                "Ok",
+                              ),
+                              onPressed: () {
+                                clearTexts();
+                                setState(() {});
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    setState(() {});
                   }
                 },
               );

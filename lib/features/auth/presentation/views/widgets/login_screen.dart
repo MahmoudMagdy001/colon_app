@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:colon_app/features/auth/presentation/views/widgets/reset_password.dart';
 import 'package:colon_app/responsive.dart';
 import 'package:email_validator/email_validator.dart';

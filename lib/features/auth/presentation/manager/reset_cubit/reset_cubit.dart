@@ -3,8 +3,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'reset_state.dart';
+
+final supabase = Supabase.instance.client;
 
 class ResetCubit extends Cubit<ResetState> {
   ResetCubit() : super(ResetInitial());
@@ -13,7 +16,7 @@ class ResetCubit extends Cubit<ResetState> {
   Future<void> resetPassword(String email, BuildContext context) async {
     try {
       emit(ResetLoading());
-      // await _auth.sendPasswordResetEmail(email: email);
+      await supabase.auth.resetPasswordForEmail(email);
       emit(ResetSuccess());
       showDialog(
         context: context,

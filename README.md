@@ -1,4 +1,4 @@
-# colon_app
+# Colon Cancer Diagnosis Application 
 
 A new Flutter project.
 
