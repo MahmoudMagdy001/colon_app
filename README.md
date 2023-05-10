@@ -4,13 +4,34 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This application uses the Supabase Database and is built with Flutter, so you will need to install and configure flutter.
 
-A few resources to get you started if this is your first Flutter project:
+Then to run debug preview on connected Android device, use the following commands:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+flutter pub get
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+flutter run
+
+If you want to build release apk for better performance, do the following:
+
+flutter pub get
+
+Depending on the changes you've made, you may also need to run these commands before running the application:
+
+flutter clean
+
+flutter pub get
+
+flutter pub run flutter_launcher_icons:main
+
+## Contributors 
+- @mohamedwaleed22 - Thank you for your supabase Database support.
+
+## Features
+ 
+ - Save your patient information
+ - add tumor marker for the patient
+ - view the chart for tumor marker
+ - fast search for a patient
+ - patient drug tracking and view details
+ 
