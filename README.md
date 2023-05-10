@@ -20,9 +20,11 @@ flutter pub get
 flutter pub run flutter_launcher_icons:main
 
 ## Contributors 
+
 - @mohamedwaleed22 - Thank you for your supabase Database support.
 
 ## Features
+
  - show news of colon cancer 
  - Save your patient information
  - add tumor marker for the patient
@@ -31,6 +33,7 @@ flutter pub run flutter_launcher_icons:main
  - patient drug tracking and view details
 
  ## Permissions
+ 
  On Android versions prior to Android 6.0, Colon Cancer Diagnosis App requires the following permissions:
 
  - Full Network Access
