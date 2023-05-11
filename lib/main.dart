@@ -22,9 +22,9 @@ import 'features/news/presentation/manager/news_cubit/news_cubit.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
-    url: 'https://yrgwcqigxvexercvhhzr.supabase.co',
+    url: 'https://gheehkolmwuffdreiijw.supabase.co',
     anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlyZ3djcWlneHZleGVyY3ZoaHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODIwMTUwNzUsImV4cCI6MTk5NzU5MTA3NX0.n1jvJ8k-pUZtdA9OzrRyNBcJQ_FheFMoNTud3aBVK2Q',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZWVoa29sbXd1ZmZkcmVpaWp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODM3NDUxOTIsImV4cCI6MTk5OTMyMTE5Mn0.B7MQNWcPyNTpcGaCNOa1peefo8SNcyPR3rfnA-puNAw',
   );
   setupServiceLocator();
   Bloc.observer = MyBlocObserver();

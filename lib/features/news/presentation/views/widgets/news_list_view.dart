@@ -42,7 +42,7 @@ class NewsListView extends StatelessWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => WebViewScreen(state.news[index]
-                              .url!), // Todo make screen to show news
+                              .url!),
                         ),
                       );
                     }

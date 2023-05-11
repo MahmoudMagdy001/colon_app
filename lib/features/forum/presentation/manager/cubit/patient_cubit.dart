@@ -1,6 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:colon_app/features/forum/presentation/manager/cubit/patient_state.dart';
@@ -33,20 +34,35 @@ class PatientCubit extends Cubit<PatientState> {
         },
       );
       emit(AddSuccess(data));
+      if (kDebugMode) {
+        print(data);
+      }
     } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
       emit(AddFailure(e.toString()));
     }
   }
 
-  Future<List<Map<String, dynamic>>>? getData() async {
-    emit(GetLoading());
-    final future = supabase
-        .from('patients')
-        .select<List<Map<String, dynamic>>>()
-        .eq('doc_email', supabase.auth.currentUser?.email);
-    emit(GetSuccess(future));
-    return future;
-  }
+  // Future<List<dynamic>> getData(String docEmail) async {
+  //   final data = await supabase.rpc('get_all_patient_by_doctor_email',
+  //       params: {'doc_email_input': docEmail});
+  //   if (kDebugMode) {
+  //     print(data);
+  //   }
+  //   return data;
+  // }
+
+  // Future<List<Map<String, dynamic>>>? getData() async {
+  //   emit(GetLoading());
+  //   final future = supabase
+  //       .from('patients')
+  //       .select<List<Map<String, dynamic>>>()
+  //       .eq('doc_email', supabase.auth.currentUser?.email);
+  //   emit(GetSuccess(future));
+  //   return future;
+  // }
 
   Future<void> deletePatient(int id) async {
     try {

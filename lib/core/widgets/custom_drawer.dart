@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:colon_app/core/widgets/user_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,12 +29,19 @@ bool _tumorMarkerSelected = false;
 bool _patientTrackingSelected = false;
 bool _statSelected = false;
 
-String? email = supabase.auth.currentUser!.email;
-List<String> emailParts = email!.split("@");
-
-String username = emailParts[0];
+late String? email;
+late List<String>? emailParts;
+late String? username;
 
 class _MyDrawerState extends State<MyDrawer> {
+  @override
+  void initState() {
+    super.initState();
+    email = supabase.auth.currentUser!.email;
+    emailParts = email!.split("@");
+    username = emailParts![0];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -215,6 +224,7 @@ class _MyDrawerState extends State<MyDrawer> {
                     _patientTrackingSelected = false;
                     _statSelected = false;
                   });
+                  GoRouter.of(context).go(AppRouter.kAuthView);
                 },
               );
             },

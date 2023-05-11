@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:colon_app/core/utlis/app_router.dart';
+import 'package:colon_app/core/widgets/custom_loading_indicator.dart';
 import 'package:colon_app/features/forum/presentation/manager/cubit/patient_cubit.dart';
 import 'package:colon_app/features/forum/presentation/manager/cubit/patient_state.dart';
 import 'package:flutter/material.dart';
@@ -36,25 +37,31 @@ class ForumAction extends StatelessWidget {
       width: double.infinity,
       child: BlocBuilder<PatientCubit, PatientState>(
         builder: (context, state) {
-          return CustomButton(
-            backgroundColor: kButtonColor,
-            textColor: Colors.white,
-            text: 'Submit'.toUpperCase(),
-            onPressed: () async {
-              if (formkey.currentState!.validate()) {
-                await BlocProvider.of<PatientCubit>(context).addPatient(
-                  nameController.text.trim(),
-                  ageController.text.trim(),
-                  int.parse(heightController.text),
-                  int.parse(weightController.text),
-                  isSelected,
-                  _firstRadioValue,
-                );
-                GoRouter.of(context).go(AppRouter.kRecordsView);
-                clearTexts();
-              }
-            },
-          );
+          if (state is AddLoading) {
+            return const Center(
+              child: CustomLoadingIndicator(),
+            );
+          } else {
+            return CustomButton(
+              backgroundColor: kButtonColor,
+              textColor: Colors.white,
+              text: 'Submit'.toUpperCase(),
+              onPressed: () async {
+                if (formkey.currentState!.validate()) {
+                  await BlocProvider.of<PatientCubit>(context).addPatient(
+                    nameController.text.trim(),
+                    ageController.text.trim(),
+                    int.parse(heightController.text),
+                    int.parse(weightController.text),
+                    isSelected,
+                    _firstRadioValue,
+                  );
+                  GoRouter.of(context).go(AppRouter.kRecordsView);
+                  clearTexts();
+                }
+              },
+            );
+          }
         },
       ),
     );

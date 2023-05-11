@@ -7,11 +7,16 @@ import '../utlis/styles.dart';
 
 final supabase = Supabase.instance.client;
 
-class DetailsUser extends StatelessWidget {
+class DetailsUser extends StatefulWidget {
   const DetailsUser({super.key, required this.username});
 
-  final String username;
+  final String? username;
 
+  @override
+  State<DetailsUser> createState() => _DetailsUserState();
+}
+
+class _DetailsUserState extends State<DetailsUser> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -48,7 +53,7 @@ class DetailsUser extends StatelessWidget {
               const SizedBox(width: 10),
               const Text('Hi , ', style: Styles.textStyle18),
               Text(
-                username,
+                widget.username.toString(),
                 style: Styles.textStyle18.copyWith(color: Colors.black),
               )
             ],

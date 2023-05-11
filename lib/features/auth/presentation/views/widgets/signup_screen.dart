@@ -89,7 +89,6 @@ class _SignupScreenState extends State<SignupScreen> {
                               formkey: formkey,
                             ),
                             const SizedBox(height: 10),
-                           
                           ],
                         ),
                       );
