@@ -23,7 +23,7 @@ class _MyWidgetState extends State<StatisticsDetails> {
       itemCount: imagePaths.length,
       itemBuilder: (context, index) {
         return Padding(
-          padding: const EdgeInsets.only(top: 10),
+          padding: const EdgeInsets.only(bottom: 10),
           child: Image.asset(
             imagePaths[index],
             fit: BoxFit.cover,
