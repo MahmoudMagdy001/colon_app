@@ -58,10 +58,14 @@ class _PatientTrackingDetailsState extends State<PatientTrackingDetails> {
           itemBuilder: (context, index) {
             return InkWell(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => PatientTrackingInfo(
-                      iD: data[index]['p_id'], name: data[index]['p_name']),
-                ));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => PatientTrackingInfo(
+                      iD: data[index]['p_id'],
+                      name: data[index]['p_name'],
+                    ),
+                  ),
+                );
               },
               child: Card(
                 child: Padding(

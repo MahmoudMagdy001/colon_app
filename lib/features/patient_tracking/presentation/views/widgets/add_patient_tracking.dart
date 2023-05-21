@@ -5,6 +5,7 @@ import 'package:colon_app/core/widgets/custom_loading_indicator.dart';
 import 'package:colon_app/features/patient_tracking/presentation/manager/cubit/patient_tracking_cubit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -62,18 +63,6 @@ class _AddPatientTrackingState extends State<AddPatientTracking> {
     _notesController.dispose();
     super.dispose();
   }
-
-  // void submitForm() {
-  //   if (_formKey.currentState!.validate()) {
-  //     // Submit form data here
-  //     print('Drug: ${_drugController.text}');
-  //     print('Dose: ${_doseController.text}');
-  //     print('AJCC Stage: $_ajccStage');
-  //     print('TNM: $_tnm');
-  //     print('Grade: $_grade');
-  //     print('Notes: ${_notesController.text}');
-  //   }
-  // }
 
   Future<List<dynamic>> getAllPatientsByDoctorEmail(String docEmail) async {
     final data = await supabase.rpc('get_all_patient_by_doctor_email',
@@ -187,14 +176,7 @@ class _AddPatientTrackingState extends State<AddPatientTracking> {
                                       (document) =>
                                           document['p_name'] == _selectedName,
                                     );
-                                    // selectedAge = selectedDocument['age_years'];
-                                    // if (kDebugMode) {
-                                    //   print(selectedAge);
-                                    // }
-                                    // selectedGender = selectedDocument['p_gender'];
-                                    // if (kDebugMode) {
-                                    //   print(selectedGender);
-                                    // }
+
                                     selectedID = selectedDocument['p_id'];
                                     if (kDebugMode) {
                                       print(selectedID);
@@ -227,6 +209,10 @@ class _AddPatientTrackingState extends State<AddPatientTracking> {
                             const SizedBox(width: 10),
                             Expanded(
                               child: TextFormField(
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                keyboardType: TextInputType.number,
                                 controller: _doseController,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
@@ -257,8 +243,7 @@ class _AddPatientTrackingState extends State<AddPatientTracking> {
                                 onChanged: (newValue) {
                                   setState(() {
                                     _ajccStage = newValue!;
-                                    _tnm =
-                                        null; // Reset TNM when AJCC stage changes
+                                    _tnm = null;
                                   });
                                 },
                                 validator: (value) {
@@ -324,7 +309,6 @@ class _AddPatientTrackingState extends State<AddPatientTracking> {
                           ],
                         ),
                         const SizedBox(height: 15),
-                        // if (_ajccStage != null) // Only show when AJCC stage is selected
                         DropdownButtonFormField<String>(
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
@@ -355,9 +339,7 @@ class _AddPatientTrackingState extends State<AddPatientTracking> {
                                   ?.map<DropdownMenuItem<String>>(
                                       (String value) {
                                     if (value == 'T0, N0, M0' &&
-                                        _ajccStage != '0') {
-                                      // return value; // Hide T0, N0, M0 for AJCC stages other than 0
-                                    }
+                                        _ajccStage != '0') {}
                                     return DropdownMenuItem<String>(
                                       value: value,
                                       child: Text(value),
@@ -367,7 +349,6 @@ class _AddPatientTrackingState extends State<AddPatientTracking> {
                                   .toList(),
                         ),
                         const SizedBox(height: 15),
-
                         TextFormField(
                           controller: _notesController,
                           decoration: InputDecoration(

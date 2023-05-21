@@ -36,7 +36,6 @@ class RecordsViewBody extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => const PatientsList()));
-                // GoRouter.of(context).push(AppRouter.kSearchScreen);
               },
               icon: Image.asset(AssetsData.search,
                   height: 28, width: 30, color: kButtonColor),

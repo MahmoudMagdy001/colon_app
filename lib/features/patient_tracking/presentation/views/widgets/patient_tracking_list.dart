@@ -1,5 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, unused_field
-
+import 'package:colon_app/features/patient_tracking/presentation/views/widgets/patient_tracking_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -7,25 +6,24 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../../constants.dart';
 import '../../../../../core/utlis/styles.dart';
 import '../../../../../core/widgets/custom_text_form_field.dart';
-import 'details_screen.dart';
 
 final supabase = Supabase.instance.client;
 
-class PatientsList extends StatefulWidget {
-  const PatientsList({Key? key}) : super(key: key);
+class PatientTrackingList extends StatefulWidget {
+  const PatientTrackingList({super.key});
 
   @override
-  _PatientsListState createState() => _PatientsListState();
+  State<PatientTrackingList> createState() => _PatientTrackingListState();
 }
 
-class _PatientsListState extends State<PatientsList> {
+class _PatientTrackingListState extends State<PatientTrackingList> {
   final TextEditingController _nameController = TextEditingController();
   List<dynamic> _patients = [];
   String _searchQuery = '';
 
-  Future<List<dynamic>> _getAllPatientsByDoctorEmail(String docEmail) async {
-    final data = await supabase.rpc('get_all_patient_by_doctor_email',
-        params: {'doc_email_input': docEmail});
+  Future<List<dynamic>> getAllPatientsByDoctorEmail(String docEmail) async {
+    final data = await supabase.rpc('get_patients_with_drug_info',
+        params: {'doctor_email_input': docEmail});
     if (kDebugMode) {
       print(data);
     }
@@ -33,7 +31,7 @@ class _PatientsListState extends State<PatientsList> {
   }
 
   void getData() {
-    _getAllPatientsByDoctorEmail('${supabase.auth.currentUser?.email}')
+    getAllPatientsByDoctorEmail('${supabase.auth.currentUser?.email}')
         .then((data) {
       setState(() {
         _patients = data;
@@ -60,7 +58,7 @@ class _PatientsListState extends State<PatientsList> {
         backgroundColor: Colors.white,
         foregroundColor: kTextColor,
         title: const Text(
-          'Patients List',
+          'Patient Tracking List',
           style: Styles.textStyle18,
         ),
       ),
@@ -94,10 +92,14 @@ class _PatientsListState extends State<PatientsList> {
                 return InkWell(
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                PatientDetailsPage(id: patient['p_id'])));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PatientTrackingInfo(
+                          iD: patient['p_id'],
+                          name: patient['p_name'],
+                        ),
+                      ),
+                    );
                   },
                   child: ListTile(
                     title: Row(
@@ -112,10 +114,10 @@ class _PatientsListState extends State<PatientsList> {
                         ),
                       ],
                     ),
-                    subtitle: Text(
-                      patient['p_submit_date'],
-                      style: const TextStyle(fontSize: 15),
-                    ),
+                    // subtitle: Text(
+                    //   patient['p_submit_date'],
+                    //   style: const TextStyle(fontSize: 15),
+                    // ),
                   ),
                 );
               },
