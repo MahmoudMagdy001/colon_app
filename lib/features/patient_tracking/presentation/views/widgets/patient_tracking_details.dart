@@ -100,7 +100,7 @@ class _PatientTrackingDetailsState extends State<PatientTrackingDetails> {
                             );
                           },
                         );
-                        setState(() {});
+                        // setState(() {});
                       },
                       icon: const Icon(
                         Icons.delete,

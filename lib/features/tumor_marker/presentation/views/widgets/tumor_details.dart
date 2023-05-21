@@ -410,36 +410,63 @@ class _TumorDetailsState extends State<TumorDetails> {
                   double? result4 = five.isEmpty ? null : double.parse(five);
 
                   if (formkey.currentState!.validate()) {
-                    await BlocProvider.of<TumorCubit>(context).addTumor(
-                      selectedID,
-                      result,
-                      result1,
-                      result2,
-                      result3,
-                      result4,
-                    );
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text("Add Tumor"),
-                          content: const Text("Tumor Add Successfully."),
-                          actions: [
-                            TextButton(
-                              child: const Text(
-                                "Ok",
+                    if (oneController.text == '' &&
+                        twoController.text == '' &&
+                        threeController.text == '' &&
+                        fourController.text == '' &&
+                        fiveController.text == '') {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text("Tumor Validate"),
+                            content: const Text("Please Add any value."),
+                            actions: [
+                              TextButton(
+                                child: const Text(
+                                  "OK",
+                                ),
+                                onPressed: () {
+                                  setState(() {});
+                                  Navigator.of(context).pop();
+                                },
                               ),
-                              onPressed: () {
-                                clearTexts();
-                                setState(() {});
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                    setState(() {});
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      await BlocProvider.of<TumorCubit>(context).addTumor(
+                        selectedID,
+                        result,
+                        result1,
+                        result2,
+                        result3,
+                        result4,
+                      );
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text("Add Tumor"),
+                            content: const Text("Tumor Add Successfully."),
+                            actions: [
+                              TextButton(
+                                child: const Text(
+                                  "OK",
+                                ),
+                                onPressed: () {
+                                  clearTexts();
+                                  setState(() {});
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      setState(() {});
+                    }
                   }
                 },
               );

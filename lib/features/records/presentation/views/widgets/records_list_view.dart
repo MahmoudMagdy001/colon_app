@@ -105,7 +105,7 @@ class _RecordsListViewState extends State<RecordsListView> {
                             );
                           },
                         );
-                        setState(() {});
+                        // setState(() {});
                       },
                       icon: const Icon(
                         Icons.delete,
