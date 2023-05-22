@@ -121,7 +121,7 @@ class _SignupScreenState extends State<SignupScreen> {
           const SizedBox(height: 25),
           CustomTextFormField(
             controller: displayNameController,
-            keyboardType: TextInputType.emailAddress,
+            keyboardType: TextInputType.text,
             validator: (value) {
               if (value!.isEmpty) {
                 return 'Please entre the Name';

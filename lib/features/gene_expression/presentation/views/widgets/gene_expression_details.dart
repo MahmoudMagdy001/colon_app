@@ -1,9 +1,13 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../../constants.dart';
 import '../../../../../core/utlis/styles.dart';
 import '../../../../../core/widgets/custom_button.dart';
+import 'package:http/http.dart' as http;
 
 final supabase = Supabase.instance.client;
 
@@ -17,6 +21,29 @@ class GeneDetails extends StatefulWidget {
 class _GeneDetailsState extends State<GeneDetails> {
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   TextEditingController geneController = TextEditingController();
+  String? seq;
+
+  Future<List<dynamic>> makePostRequest(String gene) async {
+    final url = Uri.parse('http://10.0.2.2:5000/gene_search');
+    final header = {"Content-type": "application/json"};
+    final body = {'gene': gene};
+    final response =
+        await http.post(url, headers: header, body: jsonEncode(body));
+    final data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        print(data[0]['protein_alignment']);
+      }
+      setState(() {
+        seq = data[0]['protein_alignment'];
+      });
+    } else {
+      if (kDebugMode) {
+        print('error');
+      }
+    }
+    return data;
+  }
 
   @override
   void dispose() {
@@ -71,7 +98,18 @@ class _GeneDetailsState extends State<GeneDetails> {
                         ),
                       ),
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.020),
+                        height: MediaQuery.of(context).size.height * 0.020,
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: seq != null
+                            ? Text(
+                                seq.toString(),
+                                style: const TextStyle(
+                                    fontSize: 20, letterSpacing: 5),
+                              )
+                            : const SizedBox(),
+                      ),
                       Row(
                         children: [
                           Expanded(
@@ -81,6 +119,8 @@ class _GeneDetailsState extends State<GeneDetails> {
                               text: 'Reset'.toUpperCase(),
                               onPressed: () {
                                 geneController.clear();
+                                seq = '';
+                                setState(() {});
                               },
                             ),
                           ),
@@ -91,12 +131,14 @@ class _GeneDetailsState extends State<GeneDetails> {
                               textColor: Colors.white,
                               text: 'Submit'.toUpperCase(),
                               onPressed: () async {
-                                if (formkey.currentState!.validate()) {}
+                                if (formkey.currentState!.validate()) {
+                                  makePostRequest(geneController.text.trim());
+                                }
                               },
                             ),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),

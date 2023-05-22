@@ -19,8 +19,8 @@ class HistopathologyCubit extends Cubit<HistopathologyState> {
       final image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
 
-      final imageTemporary = File(image.path);
-      imageHistopathology = imageTemporary;
+      imageHistopathology = File(image.path);
+      // imageHistopathology = imageTemporary;
       emit(HistopathologySuccess());
     } on PlatformException {
       emit(HistopathologyFailure());
