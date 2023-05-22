@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:colon_app/core/widgets/custom_loading_indicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,6 +19,7 @@ class HistopathologyDetails extends StatefulWidget {
 
 class _HistopathologyDetailsState extends State<HistopathologyDetails> {
   String result = '';
+  bool loading = false;
 
   String removeDoubleQuotes(String input) {
     return input.replaceAll('"', '');
@@ -84,6 +86,16 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
         print('Image upload failed with status ${response.statusCode}');
       }
     }
+  }
+
+  Future<void> addphoto(File imageFile) async {
+    setState(() {
+      loading = true;
+    });
+    await uploadImage(imageFile);
+    setState(() {
+      loading = false;
+    });
   }
 
   File? imageHistopathology;
@@ -155,7 +167,8 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
                       ? Image.file(
                           imageHistopathology!,
                           width: double.infinity,
-                          height: 350,
+                          fit: BoxFit.fitHeight,
+                          height: 250,
                         )
                       : const Icon(
                           Icons.question_mark,
@@ -188,16 +201,19 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
                         ),
                       ),
                       const SizedBox(width: 20.0),
-                      Expanded(
-                        child: CustomButton(
-                          backgroundColor: kButtonColor,
-                          text: 'Submit'.toUpperCase(),
-                          textColor: Colors.white,
-                          onPressed: () {
-                            uploadImage(imageHistopathology!);
-                          },
-                        ),
-                      ),
+                      if (imageHistopathology != null)
+                        loading == true
+                            ? const Center(child: CustomLoadingIndicator())
+                            : Expanded(
+                                child: CustomButton(
+                                  backgroundColor: kButtonColor,
+                                  text: 'Submit'.toUpperCase(),
+                                  textColor: Colors.white,
+                                  onPressed: () {
+                                    addphoto(imageHistopathology!);
+                                  },
+                                ),
+                              ),
                     ],
                   ),
                 ],
