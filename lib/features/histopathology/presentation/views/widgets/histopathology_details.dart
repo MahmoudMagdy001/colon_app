@@ -178,10 +178,6 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
                   const SizedBox(height: 25),
                   result == ''
                       ? Container()
-                      // Text(
-                      //     'Results Here..',
-                      //     style: Styles.textStyle25.copyWith(color: kTextColor),
-                      //   )
                       : Text(
                           result,
                           style: Styles.textStyle25.copyWith(color: kTextColor),
