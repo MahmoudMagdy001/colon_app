@@ -52,9 +52,12 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                       Row(
                         children: [
                           const Expanded(
-                            child: Text(
-                              'Upload Endoscopy images here',
-                              style: Styles.textStyle25,
+                            child: Opacity(
+                              opacity: 0.7,
+                              child: Text(
+                                'Upload Endoscopy images here',
+                                style: Styles.textStyle25,
+                              ),
                             ),
                           ),
                           SizedBox(

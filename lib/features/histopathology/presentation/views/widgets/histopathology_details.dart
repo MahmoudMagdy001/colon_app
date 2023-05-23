@@ -140,9 +140,12 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
                   Row(
                     children: [
                       const Expanded(
-                        child: Text(
-                          'Upload Histopathology images here',
-                          style: Styles.textStyle25,
+                        child: Opacity(
+                          opacity: 0.7,
+                          child: Text(
+                            'Upload Histopathology images here',
+                            style: Styles.textStyle25,
+                          ),
                         ),
                       ),
                       SizedBox(
