@@ -1,6 +1,6 @@
-# Colon Cancer Diagnosis Application 
+# coloretical Cancer Diagnosis Application 
 
-Colon cancer Diagnosis Application helps you track patient data and enter treatment doses for patients.
+coloretical cancer Diagnosis Application helps you track patient data and enter treatment doses for patients.
 
 ## Getting Started
 
@@ -31,7 +31,7 @@ flutter pub run flutter_launcher_icons
  - view the chart for tumor marker
  - fast search for a patient
  - patient drug tracking and view details
- - analysis of patient coloretical cancer
+ - detect of patient coloretical cancer
  - analysis of genes 
 
  ## Permissions
