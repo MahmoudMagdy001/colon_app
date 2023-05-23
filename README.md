@@ -21,7 +21,7 @@ flutter pub run flutter_launcher_icons
 
 ## Contributors 
 
-- @mohamedwaleed22 - Thank you for your supabase Database support.
+- @mohamedwaleed22 - Thank you for your supabase Database and AI model support.
 
 ## Features
 
@@ -31,6 +31,8 @@ flutter pub run flutter_launcher_icons
  - view the chart for tumor marker
  - fast search for a patient
  - patient drug tracking and view details
+ - analysis of patient coloretical cancer
+ - analysis of genes 
 
  ## Permissions
 
