@@ -177,15 +177,15 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
                         ),
                   const SizedBox(height: 25),
                   result == ''
-                      ? Text(
-                          'Results Here..',
-                          style: Styles.textStyle25.copyWith(color: kTextColor),
-                        )
+                      ? Container()
+                      // Text(
+                      //     'Results Here..',
+                      //     style: Styles.textStyle25.copyWith(color: kTextColor),
+                      //   )
                       : Text(
                           result,
                           style: Styles.textStyle25.copyWith(color: kTextColor),
                         ),
-                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -202,18 +202,21 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
                       ),
                       const SizedBox(width: 20.0),
                       if (imageHistopathology != null)
-                        loading == true
-                            ? const Center(child: CustomLoadingIndicator())
-                            : Expanded(
-                                child: CustomButton(
-                                  backgroundColor: kButtonColor,
-                                  text: 'Submit'.toUpperCase(),
-                                  textColor: Colors.white,
-                                  onPressed: () {
-                                    addphoto(imageHistopathology!);
-                                  },
+                        if (result == '')
+                          loading == true
+                              ? const Center(child: CustomLoadingIndicator())
+                              : Expanded(
+                                  child: CustomButton(
+                                    backgroundColor: kButtonColor,
+                                    text: 'Submit'.toUpperCase(),
+                                    textColor: Colors.white,
+                                    onPressed: () {
+                                      addphoto(
+                                        imageHistopathology!,
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
                     ],
                   ),
                 ],
