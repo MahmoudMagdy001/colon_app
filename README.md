@@ -1,6 +1,6 @@
-# coloretical Cancer Diagnosis Application 
+# Coloretical Cancer Diagnosis Application 
 
-coloretical cancer Diagnosis Application helps you track patient data and enter treatment doses for patients.
+Coloretical cancer Diagnosis Application helps you track patient data and enter treatment doses for patients.
 
 ## Getting Started
 
