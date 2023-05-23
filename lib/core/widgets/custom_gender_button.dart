@@ -1,4 +1,3 @@
-import 'package:colon_app/core/widgets/custom_sizedbox.dart';
 import 'package:flutter/material.dart';
 
 class CustomGenderButton extends StatelessWidget {
@@ -35,9 +34,9 @@ class CustomGenderButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Icon(icon, size: 55.0, color: iconColor),
-            5.ph,
+            const SizedBox(height: 5),
             Text(text, style: textStyle),
-            5.ph,
+            const SizedBox(height: 5),
           ],
         ),
       ),
