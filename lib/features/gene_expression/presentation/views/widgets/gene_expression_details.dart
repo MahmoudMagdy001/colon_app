@@ -21,7 +21,9 @@ class GeneDetails extends StatefulWidget {
 class _GeneDetailsState extends State<GeneDetails> {
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   TextEditingController geneController = TextEditingController();
-  String? seq;
+  String geneName = '';
+  String seq = '';
+  String seqError = '';
 
   Future<List<dynamic>> makePostRequest(String gene) async {
     final url = Uri.parse('http://10.0.2.2:5000/gene_search');
@@ -32,10 +34,12 @@ class _GeneDetailsState extends State<GeneDetails> {
     final data = jsonDecode(response.body);
     if (response.statusCode == 200) {
       if (kDebugMode) {
-        print(data[0]['protein_alignment']);
+        print(data);
       }
       setState(() {
-        seq = data[0]['protein_alignment'];
+        seq = data[0]['protein_alignment'] ?? '';
+        geneName = data[0]['gene_name'] ?? '';
+        seqError = data[0]['error'] ?? '';
       });
     } else {
       if (kDebugMode) {
@@ -80,6 +84,7 @@ class _GeneDetailsState extends State<GeneDetails> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextFormField(
+                        keyboardType: TextInputType.text,
                         controller: geneController,
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -102,14 +107,27 @@ class _GeneDetailsState extends State<GeneDetails> {
                       ),
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child: seq != null
+                        child: seq != ''
                             ? Text(
-                                seq.toString(),
+                                seq,
                                 style: const TextStyle(
                                     fontSize: 20, letterSpacing: 5),
                               )
                             : const SizedBox(),
                       ),
+                      geneName != ''
+                          ? Text(
+                              geneName,
+                              style: const TextStyle(fontSize: 20),
+                            )
+                          : const SizedBox(),
+                      seqError != ''
+                          ? Text(
+                              seqError,
+                              style: const TextStyle(fontSize: 20),
+                            )
+                          : const SizedBox(),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
                           Expanded(
@@ -118,9 +136,9 @@ class _GeneDetailsState extends State<GeneDetails> {
                               textColor: Colors.white,
                               text: 'Reset'.toUpperCase(),
                               onPressed: () {
-                                geneController.clear();
-                                seq = '';
-                                setState(() {});
+                                setState(() {
+                                  clearTexts();
+                                });
                               },
                             ),
                           ),
@@ -148,5 +166,12 @@ class _GeneDetailsState extends State<GeneDetails> {
         ),
       ),
     );
+  }
+
+  void clearTexts() {
+    geneController.clear();
+    seq = '';
+    seqError = '';
+    geneName = '';
   }
 }
