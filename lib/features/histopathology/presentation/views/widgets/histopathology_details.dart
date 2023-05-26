@@ -27,7 +27,7 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
 
   Future<void> uploadImage(File imageFile) async {
     final url = Uri.parse(
-        'http://10.0.2.2:5000/histopathology/predict'); // Replace with your actual endpoint
+        'http://10.0.2.2:5000/histopathology/predict'); 
     final request = http.MultipartRequest('POST', url);
     request.files.add(
       await http.MultipartFile.fromPath(

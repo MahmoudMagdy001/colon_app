@@ -191,6 +191,12 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
             dataSource: tumorMarkerData,
             xValueMapper: (TumorData data, _) => data.date,
             yValueMapper: (TumorData data, _) => data.value,
+            dataLabelSettings: const DataLabelSettings(
+              useSeriesColor: true,
+              textStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.normal),
+              isVisible: true,
+              showZeroValue: false,
+            ),
           );
           tumorData.add(lineSeries);
         }

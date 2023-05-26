@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
+import 'package:colon_app/core/utlis/functions/launch_url.dart';
 import 'package:colon_app/core/widgets/custom_loading_indicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,11 +26,19 @@ class _GeneDetailsState extends State<GeneDetails> {
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   TextEditingController geneController = TextEditingController();
   String geneName = '';
+  String ccsid = '';
+  String geneType = '';
+  String geneUrl = '';
   String originalGene = '';
-  String targetGene = '';
   String lines = '';
-  String seqError = '';
+  String targetGene = '';
   String finalScore = '';
+  String maxScore = '';
+  String matchScore = '';
+  String mismatchScore = '';
+  String gapOpeningScore = '';
+  String gapExtensionScore = '';
+  String seqError = '';
   String mutationType = '';
   bool loading = false;
 
@@ -43,11 +54,19 @@ class _GeneDetailsState extends State<GeneDetails> {
         print(data);
       }
       setState(() {
-        originalGene = data[0]['original_gene'] ?? '';
-        targetGene = data[0]['target_gene'] ?? '';
         geneName = data[0]['gene_name'] ?? '';
+        ccsid = data[0]['ccs_id'] ?? '';
+        geneType = data[0]['gene_type'] ?? '';
+        geneUrl = data[0]['gene_url'] ?? '';
+        originalGene = data[0]['original_gene'] ?? '';
         lines = data[0]['lines'] ?? '';
+        targetGene = data[0]['target_gene'] ?? '';
         finalScore = data[0]['final_score'] ?? '';
+        maxScore = data[0]['max_score'] ?? '';
+        matchScore = data[0]['match_score'] ?? '';
+        mismatchScore = data[0]['mismatch_score'] ?? '';
+        gapOpeningScore = data[0]['gap_opening_score'] ?? '';
+        gapExtensionScore = data[0]['gap_extension_score'] ?? '';
         seqError = data[0]['error'] ?? '';
         mutationType = data[0]['Mutation_Type'] ?? '';
       });
@@ -120,8 +139,8 @@ class _GeneDetailsState extends State<GeneDetails> {
                           }
                           return null;
                         },
-                        minLines: 5,
-                        maxLines: null,
+                        minLines: 1,
+                        maxLines: 10,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15)),
@@ -133,54 +152,6 @@ class _GeneDetailsState extends State<GeneDetails> {
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.020,
                       ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: originalGene != ''
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    targetGene,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                  Text(
-                                    lines,
-                                    style: const TextStyle(
-                                        fontSize: 15, letterSpacing: 1.19),
-                                  ),
-                                  Text(
-                                    originalGene,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              )
-                            : const SizedBox(),
-                      ),
-                      mutationType != ''
-                          ? Text(
-                              mutationType,
-                              style: const TextStyle(fontSize: 18),
-                            )
-                          : Container(),
-                      finalScore != ''
-                          ? Text(
-                              finalScore,
-                              style: const TextStyle(fontSize: 20),
-                            )
-                          : Container(),
-                      geneName != ''
-                          ? Text(
-                              geneName,
-                              style: const TextStyle(fontSize: 20),
-                            )
-                          : const SizedBox(),
-                      seqError != ''
-                          ? Text(
-                              seqError,
-                              style: const TextStyle(fontSize: 20),
-                            )
-                          : const SizedBox(),
-                      const SizedBox(height: 20),
                       Row(
                         children: [
                           Expanded(
@@ -207,12 +178,13 @@ class _GeneDetailsState extends State<GeneDetails> {
                                     text: 'Submit'.toUpperCase(),
                                     onPressed: () async {
                                       if (formkey.currentState!.validate()) {
-                                        postGene(
+                                        await postGene(
                                           geneController.text.replaceAll(
                                             RegExp(r'\s+'),
                                             '',
                                           ),
                                         );
+                                        resultDialog(context);
                                       }
                                     },
                                   ),
@@ -227,6 +199,147 @@ class _GeneDetailsState extends State<GeneDetails> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<dynamic> resultDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Gene Expression result"),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (geneName != '')
+                  Text(
+                    geneName,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                if (geneName != '') const SizedBox(height: 8),
+                if (ccsid != '')
+                  Text(
+                    ccsid,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                if (ccsid != '') const SizedBox(height: 8),
+                if (geneType != '')
+                  Text(
+                    geneType,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                if (geneType != '') const SizedBox(height: 8),
+                if (mutationType != '')
+                  Text(
+                    mutationType,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                if (mutationType != '') const SizedBox(height: 8),
+                if (originalGene != '')
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          targetGene,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        Text(
+                          lines,
+                          style: const TextStyle(
+                              fontSize: 15, letterSpacing: 1.19),
+                        ),
+                        Text(
+                          originalGene,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  ),
+                if (originalGene != '') const SizedBox(height: 8),
+                if (finalScore != '')
+                  Text(
+                    finalScore.trim(),
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                if (finalScore != '') const SizedBox(height: 8),
+                if (maxScore != '')
+                  Text(
+                    maxScore,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                if (maxScore != '') const SizedBox(height: 8),
+                if (matchScore != '')
+                  Text(
+                    matchScore,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                if (matchScore != '') const SizedBox(height: 8),
+                if (mismatchScore != '')
+                  Text(
+                    mismatchScore,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                if (mismatchScore != '') const SizedBox(height: 8),
+                if (gapOpeningScore != '')
+                  Text(
+                    gapOpeningScore,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                if (gapOpeningScore != '') const SizedBox(height: 8),
+                if (gapExtensionScore != '')
+                  Text(
+                    gapExtensionScore,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                if (gapExtensionScore != '') const SizedBox(height: 8),
+                if (seqError != '')
+                  Text(
+                    seqError,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                if (seqError != '') const SizedBox(height: 8),
+                if (geneUrl != '')
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => WebViewScreen(
+                            geneUrl
+                                .substring(geneUrl.indexOf((':')) + 1)
+                                .trim(),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      geneUrl.substring(geneUrl.indexOf((':')) + 1).trim(),
+                      style: const TextStyle(
+                          fontSize: 18,
+                          decoration: TextDecoration.underline,
+                          color: Colors.blue),
+                    ),
+                  ),
+                if (geneUrl != '') const SizedBox(height: 8),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: const Text(
+                "OK",
+              ),
+              onPressed: () {
+                setState(() {});
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
