@@ -262,7 +262,7 @@ class _GeneDetailsState extends State<GeneDetails> {
                 if (originalGene != '') const SizedBox(height: 8),
                 if (finalScore != '')
                   Text(
-                    finalScore.trim(),
+                    'Alignment ${finalScore.trim()}',
                     style: const TextStyle(fontSize: 18),
                   ),
                 if (finalScore != '') const SizedBox(height: 8),
