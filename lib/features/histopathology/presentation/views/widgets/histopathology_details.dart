@@ -26,64 +26,28 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
   }
 
   Future<void> uploadImage(File imageFile) async {
-    final url = Uri.parse('http://10.0.2.2:5000/histopathology/predict');
-    final request = http.MultipartRequest('POST', url);
-    request.files.add(
-      await http.MultipartFile.fromPath(
+    try {
+      final url = Uri.parse('http://10.0.2.2:5000/histopathology/predict');
+      var request = http.MultipartRequest('POST', url);
+      request.files.add(await http.MultipartFile.fromPath(
         'image',
         imageFile.path,
-      ),
-    );
-    final response = await request.send();
+      ));
+      var response = await request.send();
 
-    if (response.statusCode == 308) {
-      final redirectUrl = response.headers['location'];
-      if (redirectUrl != null) {
-        // Make a new request to the redirect URL
-        final redirectRequest =
-            http.MultipartRequest('POST', Uri.parse(redirectUrl));
-        redirectRequest.files
-            .add(await http.MultipartFile.fromPath('image', imageFile.path));
-        final redirectResponse = await redirectRequest.send();
-
-        if (redirectResponse.statusCode == 200) {
-          final responseData = await redirectResponse.stream.bytesToString();
-          // Process the response data as needed
-          if (kDebugMode) {
-            print('Image uploaded successfully after redirection');
-          }
-          if (kDebugMode) {
-            print(responseData);
-          }
-          String result1 = removeDoubleQuotes(responseData);
-
-          setState(() {
-            result = result1;
-          });
-        } else {
-          if (kDebugMode) {
-            print(
-                'Image upload failed with status ${redirectResponse.statusCode}');
-          }
-        }
+      if (response.statusCode == 200) {
+        var responseData = await response.stream.bytesToString();
+        // Process the response data as needed
+        if (kDebugMode) print('Image uploaded successfully');
+        setState(() => result = removeDoubleQuotes(responseData));
+        if (kDebugMode) print('Response: $responseData');
       } else {
         if (kDebugMode) {
-          print('Redirect URL not found in headers');
+          print('Image upload failed with status ${response.statusCode}');
         }
       }
-    } else if (response.statusCode == 200) {
-      final responseData = await response.stream.bytesToString();
-      // Process the response data as needed
-      if (kDebugMode) {
-        print('Image uploaded successfully');
-      }
-      if (kDebugMode) {
-        print('Response: $responseData');
-      }
-    } else {
-      if (kDebugMode) {
-        print('Image upload failed with status ${response.statusCode}');
-      }
+    } on Exception catch (e) {
+      if (kDebugMode) print('Caught error: $e');
     }
   }
 
@@ -179,9 +143,7 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
                       color: kTextColor,
                     ),
                   const SizedBox(height: 25),
-                  if (result == '')
-                    Container()
-                  else
+                  if (result != '')
                     Text(
                       result,
                       style: Styles.textStyle25.copyWith(color: kTextColor),

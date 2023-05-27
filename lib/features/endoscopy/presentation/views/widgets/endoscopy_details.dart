@@ -35,79 +35,40 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
   }
 
   Future<void> uploadImage(File imageFile) async {
-    final url = Uri.parse('http://10.0.2.2:5000/endoscopy/predict');
-    final request = http.MultipartRequest('POST', url);
-    request.files.add(
-      await http.MultipartFile.fromPath(
+    try {
+      final url = Uri.parse('http://10.0.2.2:5000/endoscopy/predict');
+      var request = http.MultipartRequest('POST', url);
+      request.files.add(await http.MultipartFile.fromPath(
         'image',
         imageFile.path,
-      ),
-    );
-    final response = await request.send();
+      ));
+      var response = await request.send();
 
-    if (response.statusCode == 308) {
-      final redirectUrl = response.headers['location'];
-      if (redirectUrl != null) {
-        // Make a new request to the redirect URL
-        final redirectRequest =
-            http.MultipartRequest('POST', Uri.parse(redirectUrl));
-        redirectRequest.files
-            .add(await http.MultipartFile.fromPath('image', imageFile.path));
-        final redirectResponse = await redirectRequest.send();
+      if (response.statusCode == 200) {
+        var responseData = await response.stream.bytesToString();
+        // Process the response data as needed
+        if (kDebugMode) print('Image uploaded successfully');
 
-        if (redirectResponse.statusCode == 200) {
-          final responseData = await redirectResponse.stream.bytesToString();
-          // Process the response data as needed
-          if (kDebugMode) {
-            print('Image uploaded successfully after redirection');
-          }
-          if (kDebugMode) {
-            print(responseData[0]);
-          }
-          String result1 = removeDoubleQuotes(responseData);
+        var responseList = jsonDecode(responseData);
+        setState(() {
+          clas = responseList[0]['class'];
+          confidence = responseList[0]['confidence'];
+          name = responseList[0]['name'];
+          result = removeDoubleQuotes(responseData);
+          xMax = responseList[0]['xmax'];
+          xMin = responseList[0]['xmin'];
+          yMax = responseList[0]['ymax'];
+          yMin = responseList[0]['ymin'];
+        });
 
-          setState(() {
-            result = result1;
-          });
-        } else {
-          if (kDebugMode) {
-            print(
-                'Image upload failed with status ${redirectResponse.statusCode}');
-          }
-        }
+        if (kDebugMode) print('Response: $responseData');
       } else {
         if (kDebugMode) {
-          print('Redirect URL not found in headers');
+          print('Image upload failed with status ${response.statusCode}');
         }
       }
-    } else if (response.statusCode == 200) {
-      final responseData = await response.stream.bytesToString();
-      // Process the response data as needed
-
-      List<dynamic> responseList = jsonDecode(responseData);
-      String result1 = removeDoubleQuotes(responseData);
-
-      setState(() {
-        clas = responseList[0]['class'];
-        confidence = responseList[0]['confidence'];
-        name = responseList[0]['name'];
-        result = result1;
-        xMax = responseList[0]['xmax'];
-        xMin = responseList[0]['xmin'];
-        yMax = responseList[0]['ymax'];
-        yMin = responseList[0]['ymin'];
-      });
-
-      if (kDebugMode) {
-        print('Image uploaded successfully');
-      }
-      if (kDebugMode) {
-        print('Response: $responseData');
-      }
-    } else {
-      if (kDebugMode) {
-        print('Image upload failed with status ${response.statusCode}');
-      }
+    } on Exception catch (e) {
+      if (kDebugMode) print('Caught error: $e');
     }
   }
 
@@ -204,9 +165,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                         color: kTextColor,
                       ),
                     const SizedBox(height: 25),
-                    if (result == '')
-                      Container()
-                    else
+                    if (result != '')
                       Text(
                         yMax.toString(),
                         style: Styles.textStyle25.copyWith(color: kTextColor),
