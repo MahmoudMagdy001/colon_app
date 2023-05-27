@@ -26,8 +26,7 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
   }
 
   Future<void> uploadImage(File imageFile) async {
-    final url = Uri.parse(
-        'http://10.0.2.2:5000/histopathology/predict'); 
+    final url = Uri.parse('http://10.0.2.2:5000/histopathology/predict');
     final request = http.MultipartRequest('POST', url);
     request.files.add(
       await http.MultipartFile.fromPath(
@@ -166,25 +165,27 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
                     ],
                   ),
                   const SizedBox(height: 25),
-                  imageHistopathology != null
-                      ? Image.file(
-                          imageHistopathology!,
-                          width: double.infinity,
-                          fit: BoxFit.fitHeight,
-                          height: 250,
-                        )
-                      : const Icon(
-                          Icons.question_mark,
-                          size: 250,
-                          color: kTextColor,
-                        ),
+                  if (imageHistopathology != null)
+                    Image.file(
+                      imageHistopathology!,
+                      width: double.infinity,
+                      fit: BoxFit.fitHeight,
+                      height: 250,
+                    )
+                  else
+                    const Icon(
+                      Icons.question_mark,
+                      size: 250,
+                      color: kTextColor,
+                    ),
                   const SizedBox(height: 25),
-                  result == ''
-                      ? Container()
-                      : Text(
-                          result,
-                          style: Styles.textStyle25.copyWith(color: kTextColor),
-                        ),
+                  if (result == '')
+                    Container()
+                  else
+                    Text(
+                      result,
+                      style: Styles.textStyle25.copyWith(color: kTextColor),
+                    ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

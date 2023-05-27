@@ -167,28 +167,29 @@ class _GeneDetailsState extends State<GeneDetails> {
                             ),
                           ),
                           const SizedBox(width: 10),
-                          loading == true
-                              ? const Center(
-                                  child: CustomLoadingIndicator(),
-                                )
-                              : Expanded(
-                                  child: CustomButton(
-                                    backgroundColor: kButtonColor,
-                                    textColor: Colors.white,
-                                    text: 'Submit'.toUpperCase(),
-                                    onPressed: () async {
-                                      if (formkey.currentState!.validate()) {
-                                        await postGene(
-                                          geneController.text.replaceAll(
-                                            RegExp(r'\s+'),
-                                            '',
-                                          ),
-                                        );
-                                        resultDialog(context);
-                                      }
-                                    },
-                                  ),
-                                ),
+                          if (loading == true)
+                            const Center(
+                              child: CustomLoadingIndicator(),
+                            )
+                          else
+                            Expanded(
+                              child: CustomButton(
+                                backgroundColor: kButtonColor,
+                                textColor: Colors.white,
+                                text: 'Submit'.toUpperCase(),
+                                onPressed: () async {
+                                  if (formkey.currentState!.validate()) {
+                                    await postGene(
+                                      geneController.text.replaceAll(
+                                        RegExp(r'\s+'),
+                                        '',
+                                      ),
+                                    );
+                                    resultDialog(context);
+                                  }
+                                },
+                              ),
+                            ),
                         ],
                       ),
                     ],
@@ -316,7 +317,7 @@ class _GeneDetailsState extends State<GeneDetails> {
                       );
                     },
                     child: Text(
-                      geneUrl.substring(geneUrl.indexOf((':')) + 1).trim(),
+                      geneUrl.split(": ")[1],
                       style: const TextStyle(
                           fontSize: 18,
                           decoration: TextDecoration.underline,
