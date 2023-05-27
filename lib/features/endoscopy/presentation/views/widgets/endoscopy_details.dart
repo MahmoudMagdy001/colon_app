@@ -1,15 +1,18 @@
+// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
+
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as p;
 
 import '../../../../../constants.dart';
 import '../../../../../core/utlis/styles.dart';
 import '../../../../../core/widgets/custom_button.dart';
 import '../../../../../core/widgets/custom_loading_indicator.dart';
-import 'package:http/http.dart' as http;
 
 class EndoscopyDetails extends StatefulWidget {
   const EndoscopyDetails({super.key});
@@ -51,14 +54,14 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
 
         var responseList = jsonDecode(responseData);
         setState(() {
-          clas = responseList[0]['class'];
-          confidence = responseList[0]['confidence'];
-          name = responseList[0]['name'];
+          // clas = responseList[0]['class'];
+          // confidence = responseList[0]['confidence'];
+          // name = responseList[0]['name'];
           result = removeDoubleQuotes(responseData);
-          xMax = responseList[0]['xmax'];
-          xMin = responseList[0]['xmin'];
-          yMax = responseList[0]['ymax'];
-          yMin = responseList[0]['ymin'];
+          // xMax = responseList[0]['xmax'];
+          // xMin = responseList[0]['xmin'];
+          // yMax = responseList[0]['ymax'];
+          // yMin = responseList[0]['ymin'];
         });
 
         if (kDebugMode) print('Response: $responseData');
@@ -86,12 +89,37 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
   Future<File?> pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
     if (pickedFile != null) {
-      setState(() {
-        imageEndoscopy = File(pickedFile.path);
-      });
-      return File(pickedFile.path);
+      final file = File(pickedFile.path);
+      final fileExtension = p.extension(file.path).toLowerCase();
+
+      if (fileExtension == '.png' ||
+          fileExtension == '.jpg' ||
+          fileExtension == '.jpeg') {
+        setState(() {
+          imageEndoscopy = file;
+        });
+        return file;
+      } else {
+        // Show an error message or perform necessary actions for invalid image types.
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Invalid Image type'),
+            content: const Text('Selected file is not a PNG or JPG.'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'))
+            ],
+          ),
+        );
+      }
     }
+
     return null;
   }
 
@@ -167,7 +195,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                     const SizedBox(height: 25),
                     if (result != '')
                       Text(
-                        yMax.toString(),
+                        result.toString(),
                         style: Styles.textStyle25.copyWith(color: kTextColor),
                       ),
                     Row(

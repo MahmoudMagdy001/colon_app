@@ -1,14 +1,19 @@
+// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
+
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:colon_app/core/widgets/custom_loading_indicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as p;
+
+import 'package:colon_app/core/widgets/custom_loading_indicator.dart';
 
 import '../../../../../constants.dart';
 import '../../../../../core/utlis/styles.dart';
 import '../../../../../core/widgets/custom_button.dart';
-import 'package:http/http.dart' as http;
 
 class HistopathologyDetails extends StatefulWidget {
   const HistopathologyDetails({super.key});
@@ -37,8 +42,11 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
 
       if (response.statusCode == 200) {
         var responseData = await response.stream.bytesToString();
+
         // Process the response data as needed
         if (kDebugMode) print('Image uploaded successfully');
+
+        var responseList = jsonDecode(responseData);
         setState(() => result = removeDoubleQuotes(responseData));
         if (kDebugMode) print('Response: $responseData');
       } else {
@@ -62,15 +70,41 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
   }
 
   File? imageHistopathology;
+
   Future<File?> pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
     if (pickedFile != null) {
-      setState(() {
-        imageHistopathology = File(pickedFile.path);
-      });
-      return File(pickedFile.path);
+      final file = File(pickedFile.path);
+      final fileExtension = p.extension(file.path).toLowerCase();
+
+      if (fileExtension == '.png' ||
+          fileExtension == '.jpg' ||
+          fileExtension == '.jpeg') {
+        setState(() {
+          imageHistopathology = file;
+        });
+        return file;
+      } else {
+        // Show an error message or perform necessary actions for invalid image types.
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Invalid Image type'),
+            content: const Text('Selected file is not a PNG or JPG.'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'))
+            ],
+          ),
+        );
+      }
     }
+
     return null;
   }
 
@@ -146,7 +180,7 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
                   if (result != '')
                     Text(
                       result,
-                      style: Styles.textStyle25.copyWith(color: kTextColor),
+                      style: Styles.textStyle20.copyWith(color: kTextColor),
                     ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -156,8 +190,9 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
                           text: 'Upload Image'.toUpperCase(),
                           backgroundColor: kButtonColor,
                           textColor: Colors.white,
-                          onPressed: () {
-                            pickImage();
+                          onPressed: () async {
+                            await pickImage();
+
                             setState(() {});
                           },
                         ),
