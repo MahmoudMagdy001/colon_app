@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -14,6 +15,8 @@ import '../../../../../core/utlis/styles.dart';
 import '../../../../../core/widgets/custom_button.dart';
 import '../../../../../core/widgets/custom_loading_indicator.dart';
 
+import '../../../../../test_image.dart';
+
 class EndoscopyDetails extends StatefulWidget {
   const EndoscopyDetails({super.key});
 
@@ -22,16 +25,17 @@ class EndoscopyDetails extends StatefulWidget {
 }
 
 class _EndoscopyDetailsState extends State<EndoscopyDetails> {
-  String result = '';
-  bool loading = false;
-  int? clas;
-  double? confidence;
-  String name = '';
   String error = '';
-  double? xMax;
-  double? xMin;
-  double? yMax;
-  double? yMin;
+  bool loading = false;
+  int clas = 0;
+  double confidence = 0;
+  String name = '';
+
+  double xmax = 0;
+  double xmin = 0;
+  double ymax = 0;
+  double ymin = 0;
+  // List<BoundingBox> boundingBoxess = [];
 
   String removeDoubleQuotes(String input) {
     return input.replaceAll('"', '');
@@ -40,38 +44,45 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
   Future<void> uploadImage(File imageFile) async {
     try {
       final url = Uri.parse('http://10.0.2.2:5000/endoscopy/predict');
-      var request = http.MultipartRequest('POST', url);
+      final request = http.MultipartRequest('POST', url);
+      request.headers['Connection'] = 'keep-alive'; // Add keep-alive header
       request.files.add(await http.MultipartFile.fromPath(
         'image',
         imageFile.path,
       ));
-      var response = await request.send();
+
+      final response = await request.send();
 
       if (response.statusCode == 200) {
-        var responseData = await response.stream.bytesToString();
+        final responseData = await response.stream.toBytes();
+        final jsonResponse = jsonDecode(utf8.decode(responseData));
+
+        List<dynamic> data = jsonResponse;
+
+        if (data[0].length > 1) {
+          setState(() {
+            clas = data[0]['class'] ?? 0;
+            confidence = data[0]['confidence'] ?? 0;
+            name = data[0]['name'] ?? '';
+            xmin = data[0]['xmin'] ?? 0;
+            xmax = data[0]['xmax'] ?? 0;
+            ymin = data[0]['ymin'] ?? 0;
+            ymax = data[0]['ymax'] ?? 0;
+          });
+        } else {
+          error = data[0]['error'];
+        }
+
         // Process the response data as needed
-        if (kDebugMode) print('Image uploaded successfully');
-
-        var responseList = jsonDecode(responseData);
-        setState(() {
-          // clas = responseList[0]['class'];
-          // confidence = responseList[0]['confidence'];
-          // name = responseList[0]['name'];
-          result = removeDoubleQuotes(responseData);
-          // xMax = responseList[0]['xmax'];
-          // xMin = responseList[0]['xmin'];
-          // yMax = responseList[0]['ymax'];
-          // yMin = responseList[0]['ymin'];
-        });
-
-        if (kDebugMode) print('Response: $responseData');
       } else {
         if (kDebugMode) {
           print('Image upload failed with status ${response.statusCode}');
         }
       }
-    } on Exception catch (e) {
-      if (kDebugMode) print('Caught error: $e');
+    } catch (e) {
+      if (kDebugMode) {
+        print('Caught error: $e');
+      }
     }
   }
 
@@ -79,19 +90,20 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
     setState(() {
       loading = true;
     });
-    await uploadImage(imageFile);
+    await uploadImage(imageEndoscopy!);
     setState(() {
       loading = false;
     });
   }
 
   File? imageEndoscopy;
+
   Future<File?> pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
     if (pickedFile != null) {
       final file = File(pickedFile.path);
+
       final fileExtension = p.extension(file.path).toLowerCase();
 
       if (fileExtension == '.png' ||
@@ -100,6 +112,13 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
         setState(() {
           imageEndoscopy = file;
         });
+        final image = await decodeImageFromList(await file.readAsBytes());
+        final width = image.width;
+        final height = image.height;
+
+        if (kDebugMode) {
+          print('Selected image size: width $width height $height');
+        }
         return file;
       } else {
         // Show an error message or perform necessary actions for invalid image types.
@@ -110,16 +129,14 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
             content: const Text('Selected file is not a PNG or JPG.'),
             actions: [
               TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'))
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
             ],
           ),
         );
       }
     }
-
     return null;
   }
 
@@ -180,11 +197,12 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                     ),
                     const SizedBox(height: 25),
                     if (imageEndoscopy != null)
-                      Image.file(
-                        imageEndoscopy!,
-                        width: double.infinity,
-                        fit: BoxFit.fitHeight,
-                        height: 250,
+                      Stack(
+                        children: [
+                          Image.file(
+                            imageEndoscopy!,
+                          ),
+                        ],
                       )
                     else
                       const Icon(
@@ -192,12 +210,15 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                         size: 250,
                         color: kTextColor,
                       ),
-                    const SizedBox(height: 25),
-                    if (result != '')
-                      Text(
-                        result.toString(),
-                        style: Styles.textStyle25.copyWith(color: kTextColor),
+                    if (error != '')
+                      const SizedBox(
+                        height: 10,
                       ),
+                    Text(
+                      error,
+                      style: Styles.textStyle20,
+                    ),
+                    const SizedBox(height: 15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -206,29 +227,46 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                             text: 'Upload Image'.toUpperCase(),
                             backgroundColor: kButtonColor,
                             textColor: Colors.white,
-                            onPressed: () {
-                              pickImage();
+                            onPressed: () async {
+                              await pickImage();
+                              getImageSize(imageEndoscopy!);
                               setState(() {});
                             },
                           ),
                         ),
                         const SizedBox(width: 20.0),
-                        if (imageEndoscopy != null)
-                          if (result == '')
-                            loading == true
-                                ? const Center(child: CustomLoadingIndicator())
-                                : Expanded(
-                                    child: CustomButton(
-                                      backgroundColor: kButtonColor,
-                                      text: 'Submit'.toUpperCase(),
-                                      textColor: Colors.white,
-                                      onPressed: () {
-                                        addphoto(
-                                          imageEndoscopy!,
+                        if (imageEndoscopy != null && error == '')
+                          loading == true
+                              ? const Center(child: CustomLoadingIndicator())
+                              : Expanded(
+                                  child: CustomButton(
+                                    backgroundColor: kButtonColor,
+                                    text: 'Submit'.toUpperCase(),
+                                    textColor: Colors.white,
+                                    onPressed: () async {
+                                      await addphoto(
+                                        imageEndoscopy!,
+                                      );
+                                      if (error == '') {
+                                        Rect rect = Rect.fromPoints(
+                                            Offset(xmin, ymin),
+                                            Offset(xmax, ymax));
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ImageBox(
+                                              clss: name.toString(),
+                                              confidence: confidence,
+                                              imagePath: imageEndoscopy!,
+                                              rect: rect,
+                                            ),
+                                          ),
                                         );
-                                      },
-                                    ),
+                                      }
+                                    },
                                   ),
+                                ),
                       ],
                     ),
                   ],
@@ -244,14 +282,53 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
   void resetImage() {
     setState(() {
       imageEndoscopy = null;
-      result = '';
-      clas = null;
-      confidence = null;
+      error = '';
+      xmax = 0;
+      xmin = 0;
+      ymin = 0;
+      ymax = 0;
+      clas = 0;
+      confidence = 0;
       name = '';
-      xMax = null;
-      xMin = null;
-      yMax = null;
-      yMin = null;
     });
   }
+
+  Future<Size?> getImageSize(File imageFile) async {
+    if (await imageFile.exists()) {
+      final image = Image.file(imageFile);
+      final completer = Completer<Size>();
+      image.image.resolve(const ImageConfiguration()).addListener(
+        ImageStreamListener(
+          (ImageInfo info, bool _) {
+            completer.complete(
+              Size(
+                info.image.width.toDouble(),
+                info.image.height.toDouble(),
+              ),
+            );
+          },
+        ),
+      );
+
+      return completer.future;
+    } else {
+      if (kDebugMode) {
+        print('Image file does not exist.');
+      }
+      return null;
+    }
+  }
+}
+
+class BoundingBox {
+  final double xmin;
+  final double xmax;
+  final double ymin;
+  final double ymax;
+
+  BoundingBox(
+      {required this.xmin,
+      required this.xmax,
+      required this.ymin,
+      required this.ymax});
 }

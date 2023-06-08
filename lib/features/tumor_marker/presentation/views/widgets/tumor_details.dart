@@ -73,13 +73,20 @@ class _TumorDetailsState extends State<TumorDetails> {
     super.dispose();
   }
 
-  Future<List<dynamic>> getAllPatientsByDoctorEmail(String docEmail) async {
-    final data = await supabase.rpc('get_all_patient_by_doctor_email',
-        params: {'doc_email_input': docEmail});
-    if (kDebugMode) {
-      print(data[0]);
+  Future<List<dynamic>> getAllPatientsByDoctorEmail(String doctorEmail) async {
+    try {
+      final data = await supabase.rpc('getAllPatientsByDoctorEmail',
+          params: {'doctorEmail': doctorEmail});
+      if (kDebugMode) {
+        print(data[0]);
+      }
+      return data;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error: $e');
+      }
+      return [];
     }
-    return data;
   }
 
   @override

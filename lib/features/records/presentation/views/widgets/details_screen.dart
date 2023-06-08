@@ -193,7 +193,8 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
             yValueMapper: (TumorData data, _) => data.value,
             dataLabelSettings: const DataLabelSettings(
               useSeriesColor: true,
-              textStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.normal),
+              textStyle:
+                  TextStyle(fontSize: 8.5, fontWeight: FontWeight.normal),
               isVisible: true,
               showZeroValue: false,
             ),
@@ -206,7 +207,10 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: SfCartesianChart(
-                legend: Legend(isVisible: true, position: LegendPosition.top),
+                legend: Legend(
+                  isVisible: true,
+                  position: LegendPosition.top,
+                ),
                 title: ChartTitle(
                     text: 'Tumor Markers Chart', textStyle: Styles.textStyle18),
                 primaryXAxis: CategoryAxis(),

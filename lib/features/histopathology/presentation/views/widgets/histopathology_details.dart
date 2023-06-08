@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
 
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -46,7 +45,6 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
         // Process the response data as needed
         if (kDebugMode) print('Image uploaded successfully');
 
-        var responseList = jsonDecode(responseData);
         setState(() => result = removeDoubleQuotes(responseData));
         if (kDebugMode) print('Response: $responseData');
       } else {
