@@ -22,7 +22,7 @@ class ForumViewBody extends StatelessWidget {
               },
             ),
             Text(
-              "Forum",
+              "Patients Form",
               style: Styles.textStyle20.copyWith(color: kTextColor),
             ),
           ],

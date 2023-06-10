@@ -73,20 +73,13 @@ class _TumorDetailsState extends State<TumorDetails> {
     super.dispose();
   }
 
-  Future<List<dynamic>> getAllPatientsByDoctorEmail(String doctorEmail) async {
-    try {
-      final data = await supabase.rpc('getAllPatientsByDoctorEmail',
-          params: {'doctorEmail': doctorEmail});
-      if (kDebugMode) {
-        print(data[0]);
-      }
-      return data;
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error: $e');
-      }
-      return [];
+  Future<List<dynamic>> getAllPatientsByDoctorEmail(String docEmail) async {
+    final data = await supabase.rpc('get_all_patient_by_doctor_email',
+        params: {'doc_email_input': docEmail});
+    if (kDebugMode) {
+      print(data[0]);
     }
+    return data;
   }
 
   @override
@@ -156,10 +149,8 @@ class _TumorDetailsState extends State<TumorDetails> {
                               value: _selectedName,
                               items: data.map((document) {
                                 String id = document['p_id'].toString();
-
                                 String name = document['p_name'];
                                 final String displayText = '$id - $name';
-
                                 return DropdownMenuItem<String>(
                                   value: name,
                                   child: Text(displayText),
@@ -177,15 +168,7 @@ class _TumorDetailsState extends State<TumorDetails> {
                                       (document) =>
                                           document['p_name'] == _selectedName,
                                     );
-                                    selectedAge = selectedDocument['age_years'];
-                                    if (kDebugMode) {
-                                      print(selectedAge);
-                                    }
-                                    selectedGender =
-                                        selectedDocument['p_gender'];
-                                    if (kDebugMode) {
-                                      print(selectedGender);
-                                    }
+
                                     selectedID = selectedDocument['p_id'];
                                     if (kDebugMode) {
                                       print(selectedID);
@@ -223,7 +206,7 @@ class _TumorDetailsState extends State<TumorDetails> {
                           controller: twoController,
                           keyboardType: TextInputType.number,
                           prefixIcon: Icons.numbers_rounded,
-                          text: 'CA19-9',
+                          text: 'CA 19-9',
                           obscureText: false,
                           suffixText: 'IU/ml',
                         ),
@@ -299,7 +282,7 @@ class _TumorDetailsState extends State<TumorDetails> {
                           controller: threeController,
                           keyboardType: TextInputType.number,
                           prefixIcon: Icons.numbers_rounded,
-                          text: 'CA50',
+                          text: 'CA 50',
                           obscureText: false,
                           suffixText: 'IU/ml',
                         ),
@@ -321,7 +304,7 @@ class _TumorDetailsState extends State<TumorDetails> {
                           controller: fourController,
                           keyboardType: TextInputType.number,
                           prefixIcon: Icons.numbers_rounded,
-                          text: 'CA24-2',
+                          text: 'CA 24-2',
                           obscureText: false,
                           suffixText: 'IU/ml',
                         ),

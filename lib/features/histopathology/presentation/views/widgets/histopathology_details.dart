@@ -138,13 +138,13 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
                         child: Opacity(
                           opacity: 0.7,
                           child: Text(
-                            'Upload Histopathology images here',
+                            'Upload Histopathological images here',
                             style: Styles.textStyle25,
                           ),
                         ),
                       ),
                       SizedBox(
-                        width: 100,
+                        width: 50,
                         height: 58,
                         child: IconButton(
                           onPressed: () {

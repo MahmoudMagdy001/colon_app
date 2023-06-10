@@ -83,12 +83,18 @@ class _ForumDetailsState extends State<ForumDetails> {
         ),
         10.ph,
         TextFormField(
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Enter Birth Date';
+            }
+            return null;
+          },
           controller: widget.ageController,
           decoration: InputDecoration(
               prefixIcon: const Icon(Icons.calendar_today),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              labelText: "Enter Date"),
+              labelText: "Birth Date"),
           readOnly: true,
           onTap: () async {
             DateTime? pickedDate = await showDatePicker(

@@ -82,7 +82,7 @@ class MyBoxPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
       ..color = Colors.green
-      ..strokeWidth = 4
+      ..strokeWidth = 2.5
       ..style = PaintingStyle.stroke;
 
     canvas.drawRect(rect, paint);

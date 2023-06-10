@@ -8,15 +8,19 @@ import '../utlis/styles.dart';
 final supabase = Supabase.instance.client;
 
 class DetailsUser extends StatefulWidget {
-  const DetailsUser({super.key, required this.username});
+  const DetailsUser({
+    super.key,
+    // required this.username
+  });
 
-  final String? username;
+  // final String? username;
 
   @override
   State<DetailsUser> createState() => _DetailsUserState();
 }
 
 class _DetailsUserState extends State<DetailsUser> {
+  String name = supabase.auth.currentUser!.email!.split("@")[0];
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -53,7 +57,7 @@ class _DetailsUserState extends State<DetailsUser> {
               const SizedBox(width: 10),
               const Text('Hi , ', style: Styles.textStyle18),
               Text(
-                widget.username.toString(),
+                name.toString(),
                 style: Styles.textStyle18.copyWith(color: Colors.black),
               )
             ],

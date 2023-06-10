@@ -28,19 +28,20 @@ bool _geneExpressionSelected = false;
 bool _tumorMarkerSelected = false;
 bool _patientTrackingSelected = false;
 bool _statSelected = false;
+bool _settingsSelected = false;
 
-late String? email;
-late List<String>? emailParts;
-late String? username;
+// late String? email;
+// late List<String>? emailParts;
+// late String? username;
 
 class _MyDrawerState extends State<MyDrawer> {
-  @override
-  void initState() {
-    super.initState();
-    email = supabase.auth.currentUser!.email;
-    emailParts = email!.split("@");
-    username = emailParts![0];
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   email = supabase.auth.currentUser!.email;
+  //   emailParts = email!.split("@");
+  //   username = emailParts![0];
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,26 @@ class _MyDrawerState extends State<MyDrawer> {
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       child: ListView(
         children: <Widget>[
-          DetailsUser(username: username),
+          const DetailsUser(),
+          // ListTile(
+          //   leading: const Icon(Icons.settings),
+          //   title: const Text('Settings'),
+          //   // selected: _settingsSelected,
+          //   onTap: () {
+          //     setState(() {
+          //       _newsSelected = false;
+          //       _endoscopySelected = false;
+          //       _histopathologySelected = false;
+          //       _recordsSelected = false;
+          //       _geneExpressionSelected = false;
+          //       _tumorMarkerSelected = false;
+          //       _patientTrackingSelected = false;
+          //       _statSelected = false;
+          //       _settingsSelected = true;
+          //     });
+          //     GoRouter.of(context).push(AppRouter.kSettingsView);
+          //   },
+          // ),
           ListTile(
             leading: const Icon(Icons.newspaper),
             title: const Text('News'),
@@ -64,118 +84,12 @@ class _MyDrawerState extends State<MyDrawer> {
                 _tumorMarkerSelected = false;
                 _patientTrackingSelected = false;
                 _statSelected = false;
+                _settingsSelected = false;
               });
               GoRouter.of(context).go(AppRouter.kNewsView);
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.document_scanner_outlined),
-            title: const Text('Endoscopy'),
-            selected: _endoscopySelected,
-            onTap: () {
-              setState(() {
-                _newsSelected = false;
-                _endoscopySelected = true;
-                _histopathologySelected = false;
-                _recordsSelected = false;
-                _geneExpressionSelected = false;
-                _tumorMarkerSelected = false;
-                _patientTrackingSelected = false;
-                _statSelected = false;
-              });
-              GoRouter.of(context).go(AppRouter.kEndoscopyView);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.document_scanner_outlined),
-            title: const Text('Histopathology'),
-            selected: _histopathologySelected,
-            onTap: () {
-              setState(() {
-                _newsSelected = false;
-                _endoscopySelected = false;
-                _histopathologySelected = true;
-                _recordsSelected = false;
-                _geneExpressionSelected = false;
-                _tumorMarkerSelected = false;
-                _patientTrackingSelected = false;
-                _statSelected = false;
-              });
-              GoRouter.of(context).go(AppRouter.kHistopathologyView);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.archive_outlined),
-            title: const Text('Records'),
-            selected: _recordsSelected,
-            onTap: () {
-              setState(() {
-                _newsSelected = false;
-                _endoscopySelected = false;
-                _histopathologySelected = false;
-                _recordsSelected = true;
-                _geneExpressionSelected = false;
-                _tumorMarkerSelected = false;
-                _patientTrackingSelected = false;
-                _statSelected = false;
-              });
-              GoRouter.of(context).go(AppRouter.kRecordsView);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.numbers),
-            title: const Text('Gene Expression'),
-            selected: _geneExpressionSelected,
-            onTap: () {
-              setState(() {
-                _newsSelected = false;
-                _endoscopySelected = false;
-                _histopathologySelected = false;
-                _recordsSelected = false;
-                _geneExpressionSelected = true;
-                _tumorMarkerSelected = false;
-                _patientTrackingSelected = false;
-                _statSelected = false;
-              });
-              GoRouter.of(context).go(AppRouter.kGeneExpressionView);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.stacked_bar_chart),
-            title: const Text('Tumor Marker'),
-            selected: _tumorMarkerSelected,
-            onTap: () {
-              setState(() {
-                _newsSelected = false;
-                _endoscopySelected = false;
-                _histopathologySelected = false;
-                _recordsSelected = false;
-                _geneExpressionSelected = false;
-                _tumorMarkerSelected = true;
-                _patientTrackingSelected = false;
-                _statSelected = false;
-              });
-              GoRouter.of(context).go(AppRouter.kTumorMarkerView);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.table_view),
-            title: const Text('Patient Tracking'),
-            selected: _patientTrackingSelected,
-            onTap: () {
-              setState(() {
-                _newsSelected = false;
-                _endoscopySelected = false;
-                _histopathologySelected = false;
-                _recordsSelected = false;
-                _geneExpressionSelected = false;
-                _tumorMarkerSelected = false;
-                _patientTrackingSelected = true;
-                _statSelected = false;
-              });
-              GoRouter.of(context).go(AppRouter.kPatientTrachingView);
-            },
-          ),
+
           ListTile(
             leading: const Icon(Icons.query_stats),
             title: const Text('Statistics'),
@@ -189,14 +103,143 @@ class _MyDrawerState extends State<MyDrawer> {
                 _geneExpressionSelected = false;
                 _tumorMarkerSelected = false;
                 _patientTrackingSelected = false;
+                _settingsSelected = false;
                 _statSelected = true;
               });
               GoRouter.of(context).go(AppRouter.kStatisticsView);
             },
           ),
-          const Divider(
-            color: Colors.black,
+
+          ExpansionTile(
+            childrenPadding: const EdgeInsets.symmetric(horizontal: 15),
+            title: const Text('Diagnosis'),
+            children: [
+              ListTile(
+                leading: const Icon(Icons.document_scanner_outlined),
+                title: const Text('Endoscopy'),
+                selected: _endoscopySelected,
+                onTap: () {
+                  setState(() {
+                    _newsSelected = false;
+                    _endoscopySelected = true;
+                    _histopathologySelected = false;
+                    _recordsSelected = false;
+                    _geneExpressionSelected = false;
+                    _tumorMarkerSelected = false;
+                    _patientTrackingSelected = false;
+                    _settingsSelected = false;
+                    _statSelected = false;
+                  });
+                  GoRouter.of(context).go(AppRouter.kEndoscopyView);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.document_scanner_outlined),
+                title: const Text('Histopathology'),
+                selected: _histopathologySelected,
+                onTap: () {
+                  setState(() {
+                    _newsSelected = false;
+                    _endoscopySelected = false;
+                    _histopathologySelected = true;
+                    _recordsSelected = false;
+                    _geneExpressionSelected = false;
+                    _tumorMarkerSelected = false;
+                    _patientTrackingSelected = false;
+                    _settingsSelected = false;
+                    _statSelected = false;
+                  });
+                  GoRouter.of(context).go(AppRouter.kHistopathologyView);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.numbers),
+                title: const Text('Gene Expression'),
+                selected: _geneExpressionSelected,
+                onTap: () {
+                  setState(() {
+                    _newsSelected = false;
+                    _endoscopySelected = false;
+                    _histopathologySelected = false;
+                    _recordsSelected = false;
+                    _geneExpressionSelected = true;
+                    _tumorMarkerSelected = false;
+                    _patientTrackingSelected = false;
+                    _settingsSelected = false;
+                    _statSelected = false;
+                  });
+                  GoRouter.of(context).go(AppRouter.kGeneExpressionView);
+                },
+              ),
+            ],
           ),
+          ExpansionTile(
+            childrenPadding: const EdgeInsets.symmetric(horizontal: 15),
+            title: const Text('Monitoring & Records'),
+            children: [
+              ListTile(
+                leading: const Icon(Icons.archive_outlined),
+                title: const Text('Records'),
+                selected: _recordsSelected,
+                onTap: () {
+                  setState(() {
+                    _newsSelected = false;
+                    _endoscopySelected = false;
+                    _histopathologySelected = false;
+                    _recordsSelected = true;
+                    _geneExpressionSelected = false;
+                    _tumorMarkerSelected = false;
+                    _patientTrackingSelected = false;
+                    _settingsSelected = false;
+                    _statSelected = false;
+                  });
+                  GoRouter.of(context).go(AppRouter.kRecordsView);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.stacked_bar_chart),
+                title: const Text('Tumor Marker'),
+                selected: _tumorMarkerSelected,
+                onTap: () {
+                  setState(() {
+                    _newsSelected = false;
+                    _endoscopySelected = false;
+                    _histopathologySelected = false;
+                    _recordsSelected = false;
+                    _geneExpressionSelected = false;
+                    _tumorMarkerSelected = true;
+                    _patientTrackingSelected = false;
+                    _settingsSelected = false;
+                    _statSelected = false;
+                  });
+                  GoRouter.of(context).go(AppRouter.kTumorMarkerView);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.table_view),
+                title: const Text('Patient Tracking'),
+                selected: _patientTrackingSelected,
+                onTap: () {
+                  setState(() {
+                    _newsSelected = false;
+                    _endoscopySelected = false;
+                    _histopathologySelected = false;
+                    _recordsSelected = false;
+                    _geneExpressionSelected = false;
+                    _tumorMarkerSelected = false;
+                    _patientTrackingSelected = true;
+                    _settingsSelected = false;
+                    _statSelected = false;
+                  });
+                  GoRouter.of(context).go(AppRouter.kPatientTrachingView);
+                },
+              ),
+            ],
+          ),
+
+          // const Divider(
+          //   color: Colors.black,
+          // ),
           BlocBuilder<LoginCubit, LoginState>(
             builder: (context, state) {
               if (state is LogoutLoading) {
@@ -222,6 +265,7 @@ class _MyDrawerState extends State<MyDrawer> {
                     _geneExpressionSelected = false;
                     _tumorMarkerSelected = false;
                     _patientTrackingSelected = false;
+                    _settingsSelected = false;
                     _statSelected = false;
                   });
                   GoRouter.of(context).go(AppRouter.kAuthView);

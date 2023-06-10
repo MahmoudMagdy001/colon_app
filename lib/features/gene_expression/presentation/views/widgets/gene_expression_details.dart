@@ -125,7 +125,7 @@ class _GeneDetailsState extends State<GeneDetails> {
                       const Opacity(
                         opacity: 0.7,
                         child: Text(
-                          'Enter Gene Sequence Here',
+                          'Enter Protein or Nucleotide Gene Sequence Here',
                           style: Styles.textStyle23,
                         ),
                       ),

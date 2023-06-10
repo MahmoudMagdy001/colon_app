@@ -89,7 +89,7 @@ class _AddPatientTrackingState extends State<AddPatientTracking> {
                   GoRouter.of(context).go(AppRouter.kPatientTrachingView);
                 },
                 icon: const Icon(Icons.arrow_back_ios)),
-            const Text('Tracking Forum'),
+            const Text('Tracking Form'),
           ],
         ),
       ),

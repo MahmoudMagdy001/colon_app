@@ -1,6 +1,7 @@
 import 'package:colon_app/features/Statistics/presentation/views/Statistics_view.dart';
 import 'package:colon_app/features/patient_tracking/presentation/views/patient_tracking_view.dart';
 import 'package:colon_app/features/patient_tracking/presentation/views/widgets/add_patient_tracking.dart';
+import 'package:colon_app/settings.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../check.dart';
@@ -38,6 +39,7 @@ abstract class AppRouter {
   static const kPatientTrachingView = '/patienttrackingview';
   static const kAddPatientTrachingView = '/addpatienttrackingview';
   static const kStatisticsView = '/statisticsview';
+  static const kSettingsView = '/settingsview';
 
   static final router = GoRouter(
     routes: [
@@ -108,6 +110,10 @@ abstract class AppRouter {
       GoRoute(
         path: kStatisticsView,
         builder: (context, state) => const StatisticsView(),
+      ),
+      GoRoute(
+        path: kSettingsView,
+        builder: (context, state) => const SettingsScreen(),
       ),
     ],
   );
