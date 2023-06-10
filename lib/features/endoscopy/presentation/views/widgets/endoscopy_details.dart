@@ -15,7 +15,7 @@ import '../../../../../core/utlis/styles.dart';
 import '../../../../../core/widgets/custom_button.dart';
 import '../../../../../core/widgets/custom_loading_indicator.dart';
 
-import '../../../../../test_image.dart';
+import '../../../../../predict_endo_image.dart';
 
 class EndoscopyDetails extends StatefulWidget {
   const EndoscopyDetails({super.key});
@@ -35,7 +35,6 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
   double xmin = 0;
   double ymax = 0;
   double ymin = 0;
-  // List<BoundingBox> boundingBoxess = [];
 
   String removeDoubleQuotes(String input) {
     return input.replaceAll('"', '');
@@ -183,7 +182,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                           height: 58,
                           child: IconButton(
                             onPressed: () {
-                              resetImage();
+                              reset();
                               setState(() {});
                             },
                             icon: const Icon(
@@ -279,7 +278,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
     );
   }
 
-  void resetImage() {
+  void reset() {
     setState(() {
       imageEndoscopy = null;
       error = '';
@@ -318,17 +317,4 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
       return null;
     }
   }
-}
-
-class BoundingBox {
-  final double xmin;
-  final double xmax;
-  final double ymin;
-  final double ymax;
-
-  BoundingBox(
-      {required this.xmin,
-      required this.xmax,
-      required this.ymin,
-      required this.ymax});
 }

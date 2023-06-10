@@ -1,3 +1,6 @@
+// ignore_for_file: library_private_types_in_public_api
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -40,14 +43,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _setLightTheme() {
     // Replace this with your own logic to set the light theme
     // You can use the 'theme' property of the MaterialApp widget or any other approach
-    print('Light theme selected');
+    if (kDebugMode) {
+      print('Light theme selected');
+    }
   }
 
   // Example function to set the dark theme
   void _setDarkTheme() {
     // Replace this with your own logic to set the dark theme
     // You can use the 'theme' property of the MaterialApp widget or any other approach
-    print('Dark theme selected');
+    if (kDebugMode) {
+      print('Dark theme selected');
+    }
   }
 
   @override
