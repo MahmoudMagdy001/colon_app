@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, unused_element
 
 import 'package:colon_app/core/widgets/user_info.dart';
 import 'package:flutter/material.dart';
@@ -30,19 +30,7 @@ bool _patientTrackingSelected = false;
 bool _statSelected = false;
 bool _settingsSelected = false;
 
-// late String? email;
-// late List<String>? emailParts;
-// late String? username;
-
 class _MyDrawerState extends State<MyDrawer> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   email = supabase.auth.currentUser!.email;
-  //   emailParts = email!.split("@");
-  //   username = emailParts![0];
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -51,25 +39,6 @@ class _MyDrawerState extends State<MyDrawer> {
       child: ListView(
         children: <Widget>[
           const DetailsUser(),
-          // ListTile(
-          //   leading: const Icon(Icons.settings),
-          //   title: const Text('Settings'),
-          //   // selected: _settingsSelected,
-          //   onTap: () {
-          //     setState(() {
-          //       _newsSelected = false;
-          //       _endoscopySelected = false;
-          //       _histopathologySelected = false;
-          //       _recordsSelected = false;
-          //       _geneExpressionSelected = false;
-          //       _tumorMarkerSelected = false;
-          //       _patientTrackingSelected = false;
-          //       _statSelected = false;
-          //       _settingsSelected = true;
-          //     });
-          //     GoRouter.of(context).push(AppRouter.kSettingsView);
-          //   },
-          // ),
           ListTile(
             leading: const Icon(Icons.newspaper),
             title: const Text('News'),
@@ -89,7 +58,6 @@ class _MyDrawerState extends State<MyDrawer> {
               GoRouter.of(context).go(AppRouter.kNewsView);
             },
           ),
-
           ListTile(
             leading: const Icon(Icons.query_stats),
             title: const Text('Statistics'),
@@ -109,7 +77,6 @@ class _MyDrawerState extends State<MyDrawer> {
               GoRouter.of(context).go(AppRouter.kStatisticsView);
             },
           ),
-
           ExpansionTile(
             childrenPadding: const EdgeInsets.symmetric(horizontal: 15),
             title: const Text('Diagnosis'),
@@ -236,10 +203,6 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
             ],
           ),
-
-          // const Divider(
-          //   color: Colors.black,
-          // ),
           BlocBuilder<LoginCubit, LoginState>(
             builder: (context, state) {
               if (state is LogoutLoading) {
