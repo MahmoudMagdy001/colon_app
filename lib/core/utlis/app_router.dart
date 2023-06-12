@@ -1,7 +1,7 @@
 import 'package:colon_app/features/Statistics/presentation/views/Statistics_view.dart';
 import 'package:colon_app/features/patient_tracking/presentation/views/patient_tracking_view.dart';
 import 'package:colon_app/features/patient_tracking/presentation/views/widgets/add_patient_tracking.dart';
-import 'package:colon_app/settings.dart';
+import 'package:colon_app/core/widgets/settings.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../check.dart';

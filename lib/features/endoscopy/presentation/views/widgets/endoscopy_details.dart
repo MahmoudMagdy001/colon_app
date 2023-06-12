@@ -15,7 +15,7 @@ import '../../../../../core/utlis/styles.dart';
 import '../../../../../core/widgets/custom_button.dart';
 import '../../../../../core/widgets/custom_loading_indicator.dart';
 
-import '../../../../../predict_endo_image.dart';
+import 'predict_endo_image.dart';
 
 class EndoscopyDetails extends StatefulWidget {
   const EndoscopyDetails({super.key});
@@ -233,7 +233,8 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                             },
                           ),
                         ),
-                        const SizedBox(width: 20.0),
+                        if (imageEndoscopy != null && error == '')
+                          const SizedBox(width: 20.0),
                         if (imageEndoscopy != null && error == '')
                           loading == true
                               ? const Center(child: CustomLoadingIndicator())
@@ -251,7 +252,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                                             Offset(xmin, ymin),
                                             Offset(xmax, ymax));
 
-                                        Navigator.push(
+                                        await Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => ImageBox(
@@ -262,6 +263,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                                             ),
                                           ),
                                         );
+                                        reset();
                                       }
                                     },
                                   ),
