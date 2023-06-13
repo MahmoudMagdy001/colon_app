@@ -12,6 +12,7 @@ import 'package:path/path.dart' as p;
 
 import '../../../../../constants.dart';
 import '../../../../../core/utlis/styles.dart';
+import '../../../../../core/widgets/custom_alert.dart';
 import '../../../../../core/widgets/custom_button.dart';
 import '../../../../../core/widgets/custom_loading_indicator.dart';
 
@@ -233,17 +234,18 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                             },
                           ),
                         ),
-                        if (imageEndoscopy != null && error == '')
-                          const SizedBox(width: 20.0),
-                        if (imageEndoscopy != null && error == '')
-                          loading == true
-                              ? const Center(child: CustomLoadingIndicator())
-                              : Expanded(
-                                  child: CustomButton(
-                                    backgroundColor: kButtonColor,
-                                    text: 'Submit'.toUpperCase(),
-                                    textColor: Colors.white,
-                                    onPressed: () async {
+                        // if (imageEndoscopy != null && error == '')
+                        const SizedBox(width: 20.0),
+                        // if (imageEndoscopy != null && error == '')
+                        loading == true
+                            ? const Center(child: CustomLoadingIndicator())
+                            : Expanded(
+                                child: CustomButton(
+                                  backgroundColor: kButtonColor,
+                                  text: 'Submit'.toUpperCase(),
+                                  textColor: Colors.white,
+                                  onPressed: () async {
+                                    if (imageEndoscopy != null) {
                                       await addphoto(
                                         imageEndoscopy!,
                                       );
@@ -265,9 +267,21 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                                         );
                                         reset();
                                       }
-                                    },
-                                  ),
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return const CustomAlert(
+                                            title: 'Endoscopy',
+                                            content:
+                                                'Please Upload Image First.',
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
                                 ),
+                              ),
                       ],
                     ),
                   ],

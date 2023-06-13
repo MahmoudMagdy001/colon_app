@@ -12,6 +12,7 @@ import 'package:colon_app/core/widgets/custom_loading_indicator.dart';
 
 import '../../../../../constants.dart';
 import '../../../../../core/utlis/styles.dart';
+import '../../../../../core/widgets/custom_alert.dart';
 import '../../../../../core/widgets/custom_button.dart';
 
 class HistopathologyDetails extends StatefulWidget {
@@ -29,7 +30,7 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
     return input.replaceAll('"', '');
   }
 
-  Future<void> uploadImage(File imageFile) async {
+  Future<void> postImage(File imageFile) async {
     try {
       final url = Uri.parse('http://10.0.2.2:5000/histopathology/predict');
       var request = http.MultipartRequest('POST', url);
@@ -42,7 +43,6 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
       if (response.statusCode == 200) {
         var responseData = await response.stream.bytesToString();
 
-        // Process the response data as needed
         if (kDebugMode) print('Image uploaded successfully');
 
         setState(() => result = removeDoubleQuotes(responseData));
@@ -57,11 +57,11 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
     }
   }
 
-  Future<void> addphoto(File imageFile) async {
+  Future<void> loadImage(File imageFile) async {
     setState(() {
       loading = true;
     });
-    await uploadImage(imageFile);
+    await postImage(imageFile);
     setState(() {
       loading = false;
     });
@@ -196,22 +196,33 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
                         ),
                       ),
                       const SizedBox(width: 20.0),
-                      if (imageHistopathology != null)
-                        if (result == '')
-                          loading == true
-                              ? const Center(child: CustomLoadingIndicator())
-                              : Expanded(
-                                  child: CustomButton(
-                                    backgroundColor: kButtonColor,
-                                    text: 'Submit'.toUpperCase(),
-                                    textColor: Colors.white,
-                                    onPressed: () {
-                                      addphoto(
-                                        imageHistopathology!,
-                                      );
-                                    },
-                                  ),
-                                ),
+                      loading == true
+                          ? const Center(child: CustomLoadingIndicator())
+                          : Expanded(
+                              child: CustomButton(
+                                backgroundColor: kButtonColor,
+                                text: 'Submit'.toUpperCase(),
+                                textColor: Colors.white,
+                                onPressed: () async {
+                                  if (result == '' &&
+                                      imageHistopathology != null) {
+                                    await loadImage(
+                                      imageHistopathology!,
+                                    );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return const CustomAlert(
+                                          title: 'Histopathology',
+                                          content: 'Please Upload Image First.',
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
                     ],
                   ),
                 ],

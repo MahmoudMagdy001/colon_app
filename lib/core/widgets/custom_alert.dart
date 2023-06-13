@@ -13,7 +13,10 @@ class CustomAlert extends StatelessWidget {
       content: Text(content),
       actions: [
         TextButton(
-          child: const Text("OK"),
+          child: const Text(
+            "OK",
+            style: TextStyle(fontSize: 17),
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
