@@ -8,6 +8,7 @@ import '../../../../../constants.dart';
 import '../../../../../core/utlis/styles.dart';
 import '../../../../../core/widgets/custom_text_form_field.dart';
 import 'details_screen.dart';
+import 'package:flutter/services.dart';
 
 final supabase = Supabase.instance.client;
 
@@ -69,6 +70,8 @@ class _PatientsListState extends State<PatientsList> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: CustomTextFormField(
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              keyboardType: TextInputType.number,
               prefixIcon: Icons.search,
               text: 'Search by ID',
               obscureText: false,

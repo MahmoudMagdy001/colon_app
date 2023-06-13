@@ -206,7 +206,7 @@ class Logo extends StatelessWidget {
               color: kButtonColor,
             ),
             Text(
-              'COLON CANCER-APP',
+              'COLON GUARD-APP',
               style: Styles.textStyle25.copyWith(color: Colors.black),
               textAlign: TextAlign.left,
             ),

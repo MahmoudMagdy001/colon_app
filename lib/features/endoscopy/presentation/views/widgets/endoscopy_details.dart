@@ -205,7 +205,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                       )
                     else
                       const Icon(
-                        Icons.question_mark,
+                        Icons.image_not_supported_outlined,
                         size: 250,
                         color: kTextColor,
                       ),

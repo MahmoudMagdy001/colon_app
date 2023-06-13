@@ -51,7 +51,7 @@ class _SplashPageState extends State<SplashPage> {
     if (session != null) {
       GoRouter.of(context).go(AppRouter.kNewsView);
     } else {
-      GoRouter.of(context).go(AppRouter.kLoginScreen);
+      GoRouter.of(context).go(AppRouter.kOnboardingView);
     }
   }
 

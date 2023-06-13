@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../../constants.dart';
 import '../../../../../core/utlis/styles.dart';
@@ -181,6 +182,10 @@ class _TumorDetailsState extends State<TumorDetails> {
                         ),
                         const SizedBox(height: 15),
                         CustomTextFormField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^[0-9.]*')),
+                          ],
                           controller: oneController,
                           keyboardType: TextInputType.number,
                           prefixIcon: Icons.numbers_rounded,
@@ -203,6 +208,10 @@ class _TumorDetailsState extends State<TumorDetails> {
                               ),
                         10.ph,
                         CustomTextFormField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^[0-9.]*')),
+                          ],
                           controller: twoController,
                           keyboardType: TextInputType.number,
                           prefixIcon: Icons.numbers_rounded,
@@ -279,6 +288,10 @@ class _TumorDetailsState extends State<TumorDetails> {
                               ),
                         10.ph,
                         CustomTextFormField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^[0-9.]*')),
+                          ],
                           controller: threeController,
                           keyboardType: TextInputType.number,
                           prefixIcon: Icons.numbers_rounded,
@@ -301,6 +314,10 @@ class _TumorDetailsState extends State<TumorDetails> {
                               ),
                         10.ph,
                         CustomTextFormField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^[0-9.]*')),
+                          ],
                           controller: fourController,
                           keyboardType: TextInputType.number,
                           prefixIcon: Icons.numbers_rounded,
@@ -323,6 +340,10 @@ class _TumorDetailsState extends State<TumorDetails> {
                               ),
                         10.ph,
                         CustomTextFormField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^[0-9.]*')),
+                          ],
                           controller: fiveController,
                           keyboardType: TextInputType.number,
                           prefixIcon: Icons.numbers_rounded,

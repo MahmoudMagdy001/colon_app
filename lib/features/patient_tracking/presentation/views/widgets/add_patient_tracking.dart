@@ -192,6 +192,7 @@ class _AddPatientTrackingState extends State<AddPatientTracking> {
                           children: [
                             Expanded(
                               child: TextFormField(
+                                keyboardType: TextInputType.text,
                                 controller: _drugController,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
@@ -210,7 +211,8 @@ class _AddPatientTrackingState extends State<AddPatientTracking> {
                             Expanded(
                               child: TextFormField(
                                 inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'^[0-9.]*')),
                                 ],
                                 keyboardType: TextInputType.number,
                                 controller: _doseController,
@@ -350,6 +352,7 @@ class _AddPatientTrackingState extends State<AddPatientTracking> {
                         ),
                         const SizedBox(height: 15),
                         TextFormField(
+                          keyboardType: TextInputType.text,
                           controller: _notesController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(

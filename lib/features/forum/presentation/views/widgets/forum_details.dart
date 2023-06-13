@@ -30,8 +30,12 @@ class _ForumDetailsState extends State<ForumDetails> {
     return Column(
       children: [
         CustomTextFormField(
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(
+                RegExp(r'[a-zA-Z\u0600-\u06FF\s]')),
+          ],
           controller: widget.nameController,
-          keyboardType: TextInputType.name,
+          keyboardType: TextInputType.text,
           prefixIcon: Icons.person,
           text: 'Patient Name',
           validator: (value) {

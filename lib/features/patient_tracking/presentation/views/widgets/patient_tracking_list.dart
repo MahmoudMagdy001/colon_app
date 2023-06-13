@@ -1,6 +1,7 @@
 import 'package:colon_app/features/patient_tracking/presentation/views/widgets/patient_tracking_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../../constants.dart';
@@ -67,6 +68,10 @@ class _PatientTrackingListState extends State<PatientTrackingList> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: CustomTextFormField(
+              // inputFormatters: [
+              //   FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*')),
+              // ],
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               prefixIcon: Icons.search,
               text: 'Search by ID',
               obscureText: false,

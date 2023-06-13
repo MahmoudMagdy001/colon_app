@@ -19,7 +19,7 @@ class ThirdText extends StatelessWidget {
           const SizedBox(
             height: 480,
           ),
-          const Text('Discuss in the Forum',
+          const Text('Discuss in the Form',
               style: Styles.textStyle30, textAlign: TextAlign.center),
           20.ph,
           const Opacity(

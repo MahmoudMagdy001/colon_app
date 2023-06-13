@@ -1,6 +1,5 @@
 // ignore_for_file: unused_local_variable
 
-import 'package:colon_app/features/auth/presentation/views/widgets/reset_password.dart';
 import 'package:colon_app/responsive.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +84,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               loginDetails(),
-                              const ResetPassword(),
                               LoginAction(
                                 emailController: emailController,
                                 passwordController: passwordController,
@@ -93,15 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               const CreateAccount(),
                               const SizedBox(height: 10),
-                              // const CustomDivider(),
-                              // const SizedBox(height: 10),
-                              // ElevatedButton(
-                              //     onPressed: () async {
-                              //       signInGoogle(
-                              //           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlyZ3djcWlneHZleGVyY3ZoaHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODIwMTUwNzUsImV4cCI6MTk5NzU5MTA3NX0.n1jvJ8k-pUZtdA9OzrRyNBcJQ_FheFMoNTud3aBVK2Q',
-                              //           'https://yrgwcqigxvexercvhhzr.supabase.co');
-                              //     },
-                              //     child: const Text("Sign in with Google"))
                             ],
                           ),
                         );
@@ -204,7 +193,7 @@ class Logo extends StatelessWidget {
               color: kButtonColor,
             ),
             Text(
-              'COLON CANCER-APP',
+              'COLON GUARD-APP',
               style: Styles.textStyle25.copyWith(color: Colors.black),
               textAlign: TextAlign.left,
             ),
