@@ -234,9 +234,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                             },
                           ),
                         ),
-                        // if (imageEndoscopy != null && error == '')
                         const SizedBox(width: 20.0),
-                        // if (imageEndoscopy != null && error == '')
                         loading == true
                             ? const Center(child: CustomLoadingIndicator())
                             : Expanded(

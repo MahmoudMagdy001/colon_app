@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -190,7 +191,7 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
                           textColor: Colors.white,
                           onPressed: () async {
                             await pickImage();
-
+                            getImageSize(imageHistopathology!);
                             setState(() {});
                           },
                         ),
@@ -239,5 +240,31 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
       imageHistopathology = null;
       result = '';
     });
+  }
+
+  Future<Size?> getImageSize(File imageFile) async {
+    if (await imageFile.exists()) {
+      final image = Image.file(imageFile);
+      final completer = Completer<Size>();
+      image.image.resolve(const ImageConfiguration()).addListener(
+        ImageStreamListener(
+          (ImageInfo info, bool _) {
+            completer.complete(
+              Size(
+                info.image.width.toDouble(),
+                info.image.height.toDouble(),
+              ),
+            );
+          },
+        ),
+      );
+
+      return completer.future;
+    } else {
+      if (kDebugMode) {
+        print('Image file does not exist.');
+      }
+      return null;
+    }
   }
 }
