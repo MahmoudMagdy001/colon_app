@@ -1,6 +1,5 @@
 import 'package:colon_app/core/utlis/styles.dart';
 import 'package:colon_app/core/widgets/custom_divider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -20,18 +19,21 @@ class PatientTrackingInfo extends StatefulWidget {
 
 class _PatientTrackingInfoState extends State<PatientTrackingInfo> {
   Future<List<dynamic>> getAllDrugsByDoctorEmail(
-      String docEmail, int id) async {
-    final data = await supabase.rpc(
-      'get_drug_info_for_patient_and_doctor',
-      params: {
-        'd_pnt_id_input': id,
-        'doc_email_input': docEmail,
-      },
-    );
-    if (kDebugMode) {
-      print(data);
+    String docEmail,
+    int id,
+  ) async {
+    try {
+      final drugInfo = await supabase.rpc(
+        'get_drug_info_for_patient_and_doctor',
+        params: {
+          'd_pnt_id_input': id,
+          'doc_email_input': docEmail,
+        },
+      );
+      return drugInfo;
+    } catch (e) {
+      throw Exception('Failed to get drug info: $e');
     }
-    return data;
   }
 
   @override

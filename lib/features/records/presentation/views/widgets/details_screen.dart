@@ -2,7 +2,6 @@
 
 import 'package:colon_app/core/widgets/custom_button.dart';
 import 'package:colon_app/core/widgets/custom_loading_indicator.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -20,40 +19,39 @@ class PatientDetailsPage extends StatefulWidget {
 }
 
 class _PatientDetailsPageState extends State<PatientDetailsPage> {
-  Future<List<dynamic>> getpatientdata() async {
-    final patientData = await supabase.rpc(
-      'get_patient_data',
-      params: {
-        'p_id_input': widget.id,
-        'dr_email_input': '${supabase.auth.currentUser?.email}',
-      },
-    );
-    if (kDebugMode) {
-      print(patientData);
+  Future<List<dynamic>> getPatientData() async {
+    try {
+      final patientData = await supabase.rpc(
+        'get_patient_data',
+        params: {
+          'p_id_input': widget.id,
+          'dr_email_input': '${supabase.auth.currentUser?.email}',
+        },
+      );
+      return patientData;
+    } catch (e) {
+      return [];
     }
-    return patientData;
   }
 
-  Future<List<dynamic>> gettumordata() async {
-    final tumorData = await supabase.rpc(
-      'get_tumor_data',
-      params: {
-        'patient_id': widget.id,
-        'doctor_email': '${supabase.auth.currentUser?.email}',
-      },
-    );
-    if (kDebugMode) {
-      print(tumorData);
+  Future<List<dynamic>> getTumorData() async {
+    try {
+      final tumorData = await supabase.rpc(
+        'get_tumor_data',
+        params: {
+          'patient_id': widget.id,
+          'doctor_email': '${supabase.auth.currentUser?.email}',
+        },
+      );
+      return tumorData;
+    } catch (e) {
+      return [];
     }
-    return tumorData;
   }
 
   Future<void> deleteTumor() async {
     final deleteTumor = await supabase
         .rpc('delete_tumors_for_patient', params: {'p_id_input': widget.id});
-    if (kDebugMode) {
-      print(deleteTumor);
-    }
     return deleteTumor;
   }
 
@@ -77,7 +75,7 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
 
   FutureBuilder<List<dynamic>> information() {
     return FutureBuilder(
-      future: getpatientdata(),
+      future: getPatientData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -156,7 +154,7 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
 
   FutureBuilder<List<dynamic>> chart() {
     return FutureBuilder(
-      future: gettumordata(),
+      future: getTumorData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -191,13 +189,6 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
             dataSource: tumorMarkerData,
             xValueMapper: (TumorData data, _) => data.date,
             yValueMapper: (TumorData data, _) => data.value,
-            // dataLabelSettings: const DataLabelSettings(
-            //   useSeriesColor: true,
-            //   textStyle:
-            //       TextStyle(fontSize: 8.5, fontWeight: FontWeight.normal),
-            //   isVisible: true,
-            //   showZeroValue: false,
-            // ),
           );
           tumorData.add(lineSeries);
         }

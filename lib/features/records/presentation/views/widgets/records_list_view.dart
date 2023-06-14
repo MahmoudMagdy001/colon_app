@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:colon_app/core/widgets/custom_loading_indicator.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -19,13 +18,16 @@ class RecordsListView extends StatefulWidget {
 }
 
 class _RecordsListViewState extends State<RecordsListView> {
-  Future<List<dynamic>> getAllPatientsByDoctorEmail(String docEmail) async {
-    final data = await supabase.rpc('get_all_patient_by_doctor_email',
-        params: {'doc_email_input': docEmail});
-    if (kDebugMode) {
-      print(data);
+  Future<List<dynamic>> getAllPatientsByDoctorEmail(String doctorEmail) async {
+    try {
+      final data = await supabase.rpc(
+        'get_all_patient_by_doctor_email',
+        params: {'doc_email_input': doctorEmail},
+      );
+      return data;
+    } catch (e) {
+      return [];
     }
-    return data;
   }
 
   @override

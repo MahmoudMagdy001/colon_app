@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:colon_app/features/patient_tracking/presentation/views/widgets/patient_tracking_info.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -18,12 +17,15 @@ class PatientTrackingDetails extends StatefulWidget {
 
 class _PatientTrackingDetailsState extends State<PatientTrackingDetails> {
   Future<List<dynamic>> getAllPatientsByDoctorEmail(String docEmail) async {
-    final data = await supabase.rpc('get_patients_with_drug_info',
-        params: {'doctor_email_input': docEmail});
-    if (kDebugMode) {
-      print(data);
+    try {
+      final data = await supabase.rpc(
+        'get_patients_with_drug_info',
+        params: {'doctor_email_input': docEmail},
+      );
+      return data;
+    } catch (e) {
+      return [];
     }
-    return data;
   }
 
   Future<void> deleteDrug(int id) async {
