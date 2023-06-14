@@ -13,9 +13,7 @@ import 'core/utlis/app_router.dart';
 import 'core/utlis/service_locator.dart';
 import 'features/auth/presentation/manager/auth_cubit/auth_cubit.dart';
 import 'features/auth/presentation/manager/login_cubit/login_cubit.dart';
-import 'features/endoscopy/presentation/manager/cubit/endoscopy_cubit.dart';
 import 'features/forum/presentation/manager/cubit/patient_cubit.dart';
-import 'features/histopathology/presentation/manager/cubit/histopathology_cubit.dart';
 import 'features/news/data/repos/news_repo_impl.dart';
 import 'features/news/presentation/manager/news_cubit/news_cubit.dart';
 
@@ -44,8 +42,6 @@ class ColonCancerApp extends StatelessWidget {
         BlocProvider(create: (context) => LoginCubit()),
         BlocProvider(create: (context) => AuthCubit()),
         BlocProvider(create: (context) => PatientCubit()),
-        BlocProvider(create: (context) => EndoscopyCubit()),
-        BlocProvider(create: (context) => HistopathologyCubit()),
         BlocProvider(create: (context) => ResetCubit()),
         BlocProvider(create: (context) => TumorCubit()),
         BlocProvider(create: (context) => PatientTrackingCubit()),
