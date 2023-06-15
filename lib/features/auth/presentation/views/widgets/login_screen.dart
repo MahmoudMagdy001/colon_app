@@ -193,7 +193,7 @@ class Logo extends StatelessWidget {
               color: kButtonColor,
             ),
             Text(
-              'COLON GUARD',
+              'ColonGuard',
               style: Styles.textStyle25.copyWith(color: Colors.black),
               textAlign: TextAlign.left,
             ),
