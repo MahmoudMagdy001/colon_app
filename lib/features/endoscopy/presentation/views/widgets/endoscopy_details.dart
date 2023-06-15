@@ -37,8 +37,8 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
   double ymax = 0;
   double ymin = 0;
 
-  String label_binary = '';
-  String to_image = '';
+  String labelBinary = '';
+  String toImage = '';
 
   String removeDoubleQuotes(String input) {
     return input.replaceAll('"', '');
@@ -64,8 +64,8 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
 
         if (data[0].length > 1) {
           setState(() {
-            label_binary = data[0]['label_binary'].toString();
-            to_image = data[0]['to_image'];
+            labelBinary = data[0]['label_binary'].toString();
+            toImage = data[0]['to_image'];
           });
         } else {
           error = data[0]['error'];
@@ -91,7 +91,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Predicted $to_image'.split(":")[0]),
+            title: Text('Predicted $toImage'.split(":")[0]),
             content: const Text('Do you want to Proceed to polyp detection?'),
             actions: [
               TextButton(
@@ -106,7 +106,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
               TextButton(
                 child: const Text("YES"),
                 onPressed: () async {
-                  if (label_binary == '0') {
+                  if (labelBinary == '0') {
                     final url = Uri.parse('http://10.0.2.2:5000/hyper');
                     final request = http.MultipartRequest('POST', url);
                     request.headers['Connection'] =
@@ -162,7 +162,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                             'Image upload failed with status ${response.statusCode}');
                       }
                     }
-                  } else if (label_binary == '1') {
+                  } else if (labelBinary == '1') {
                     final url = Uri.parse('http://10.0.2.2:5000/adeno');
                     final request = http.MultipartRequest('POST', url);
                     request.headers['Connection'] =
@@ -353,10 +353,10 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                         size: 250,
                         color: kTextColor,
                       ),
-                    if (to_image != '') const SizedBox(height: 10),
-                    if (to_image != '')
+                    if (toImage != '') const SizedBox(height: 10),
+                    if (toImage != '')
                       Text(
-                        to_image,
+                        toImage,
                         style: Styles.textStyle20,
                       ),
                     if (error != '')
@@ -438,8 +438,8 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
       clas = 0;
       confidence = 0;
       name = '';
-      to_image = '';
-      label_binary = '';
+      toImage = '';
+      labelBinary = '';
     });
   }
 
