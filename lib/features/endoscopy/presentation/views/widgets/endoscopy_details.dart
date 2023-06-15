@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:colon_app/features/endoscopy/presentation/views/widgets/predict_endo_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -16,14 +17,13 @@ import '../../../../../core/widgets/custom_alert.dart';
 import '../../../../../core/widgets/custom_button.dart';
 import '../../../../../core/widgets/custom_loading_indicator.dart';
 
-import 'predict_endo_image.dart';
-
 class EndoscopyDetails extends StatefulWidget {
   const EndoscopyDetails({super.key});
 
   @override
   State<EndoscopyDetails> createState() => _EndoscopyDetailsState();
 }
+//
 
 class _EndoscopyDetailsState extends State<EndoscopyDetails> {
   String error = '';
@@ -36,6 +36,9 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
   double xmin = 0;
   double ymax = 0;
   double ymin = 0;
+
+  String label_binary = '';
+  String to_image = '';
 
   String removeDoubleQuotes(String input) {
     return input.replaceAll('"', '');
@@ -61,19 +64,12 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
 
         if (data[0].length > 1) {
           setState(() {
-            clas = data[0]['class'] ?? 0;
-            confidence = data[0]['confidence'] ?? 0;
-            name = data[0]['name'] ?? '';
-            xmin = data[0]['xmin'] ?? 0;
-            xmax = data[0]['xmax'] ?? 0;
-            ymin = data[0]['ymin'] ?? 0;
-            ymax = data[0]['ymax'] ?? 0;
+            label_binary = data[0]['label_binary'].toString();
+            to_image = data[0]['to_image'];
           });
         } else {
           error = data[0]['error'];
         }
-
-        // Process the response data as needed
       } else {
         if (kDebugMode) {
           print('Image upload failed with status ${response.statusCode}');
@@ -86,11 +82,158 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
     }
   }
 
+  ////////////////////////////////////////////////////
+
+  Future<void> adenoOrHyper(File imageFile) async {
+    await uploadImage(imageFile);
+    if (error == '') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Predicted $to_image'.split(":")[0]),
+            content: const Text('Do you want to Proceed to polyp detection?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(context);
+                },
+                child: const Text(
+                  'NO',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+              TextButton(
+                child: const Text("YES"),
+                onPressed: () async {
+                  if (label_binary == '0') {
+                    final url = Uri.parse('http://10.0.2.2:5000/hyper');
+                    final request = http.MultipartRequest('POST', url);
+                    request.headers['Connection'] =
+                        'keep-alive'; // Add keep-alive header
+                    request.files.add(await http.MultipartFile.fromPath(
+                      'image',
+                      imageFile.path,
+                    ));
+
+                    final response = await request.send();
+
+                    if (response.statusCode == 200) {
+                      final responseData = await response.stream.toBytes();
+                      final jsonResponse =
+                          jsonDecode(utf8.decode(responseData));
+
+                      List<dynamic> data = jsonResponse;
+                      setState(() {
+                        confidence = data[0]['conf'] ?? 0;
+                        name = data[0]['class_name'] ?? '';
+                        xmax = data[0]['bbox_list'][0] ?? 0;
+                        ymax = data[0]['bbox_list'][1] ?? 0;
+                        xmin = data[0]['bbox_list'][2] ?? 0;
+                        ymin = data[0]['bbox_list'][3] ?? 0;
+                      });
+                      if (kDebugMode) {
+                        print(xmax);
+                        print(ymax);
+                        print(xmin);
+                        print(ymin);
+                        print(name);
+                        print(confidence);
+                      }
+
+                      Rect rect = Rect.fromPoints(
+                          Offset(xmin, ymin), Offset(xmax, ymax));
+
+                      await Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ImageBox(
+                            clss: name.toString(),
+                            confidence: confidence,
+                            imagePath: imageEndoscopy!,
+                            rect: rect,
+                          ),
+                        ),
+                      );
+                      reset();
+                    } else {
+                      if (kDebugMode) {
+                        print(
+                            'Image upload failed with status ${response.statusCode}');
+                      }
+                    }
+                  } else if (label_binary == '1') {
+                    final url = Uri.parse('http://10.0.2.2:5000/adeno');
+                    final request = http.MultipartRequest('POST', url);
+                    request.headers['Connection'] =
+                        'keep-alive'; // Add keep-alive header
+                    request.files.add(await http.MultipartFile.fromPath(
+                      'image',
+                      imageFile.path,
+                    ));
+
+                    final response = await request.send();
+
+                    if (response.statusCode == 200) {
+                      final responseData = await response.stream.toBytes();
+                      final jsonResponse =
+                          jsonDecode(utf8.decode(responseData));
+
+                      List<dynamic> data = jsonResponse;
+                      setState(() {
+                        confidence = data[0]['conf'] ?? 0;
+                        name = data[0]['class_name'] ?? '';
+                        xmax = data[0]['bbox_list'][0] ?? 0;
+                        ymax = data[0]['bbox_list'][1] ?? 0;
+                        xmin = data[0]['bbox_list'][2] ?? 0;
+                        ymin = data[0]['bbox_list'][3] ?? 0;
+                      });
+                      if (kDebugMode) {
+                        print(xmax);
+                        print(ymax);
+                        print(xmin);
+                        print(ymin);
+                        print(name);
+                        print(confidence);
+                      }
+                      Rect rect = Rect.fromPoints(
+                          Offset(xmin, ymin), Offset(xmax, ymax));
+
+                      await Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ImageBox(
+                            clss: name.toString(),
+                            confidence: confidence,
+                            imagePath: imageEndoscopy!,
+                            rect: rect,
+                          ),
+                        ),
+                      );
+                      reset();
+                    } else {
+                      if (kDebugMode) {
+                        print(
+                            'Image upload failed with status ${response.statusCode}');
+                      }
+                    }
+                  }
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  //////////////////////////////
+
   Future<void> addphoto(File imageFile) async {
     setState(() {
       loading = true;
     });
-    await uploadImage(imageEndoscopy!);
+    await adenoOrHyper(imageEndoscopy!);
     setState(() {
       loading = false;
     });
@@ -210,6 +353,12 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                         size: 250,
                         color: kTextColor,
                       ),
+                    if (to_image != '') const SizedBox(height: 10),
+                    if (to_image != '')
+                      Text(
+                        to_image,
+                        style: Styles.textStyle20,
+                      ),
                     if (error != '')
                       const SizedBox(
                         height: 10,
@@ -218,7 +367,10 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                       error,
                       style: Styles.textStyle20,
                     ),
-                    const SizedBox(height: 15),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    // const SizedBox(height: 15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -247,24 +399,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                                       await addphoto(
                                         imageEndoscopy!,
                                       );
-                                      if (error == '') {
-                                        Rect rect = Rect.fromPoints(
-                                            Offset(xmin, ymin),
-                                            Offset(xmax, ymax));
-
-                                        await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => ImageBox(
-                                              clss: name.toString(),
-                                              confidence: confidence,
-                                              imagePath: imageEndoscopy!,
-                                              rect: rect,
-                                            ),
-                                          ),
-                                        );
-                                        reset();
-                                      }
+                                      if (error == '') {}
                                     } else {
                                       showDialog(
                                         context: context,
@@ -303,6 +438,8 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
       clas = 0;
       confidence = 0;
       name = '';
+      to_image = '';
+      label_binary = '';
     });
   }
 

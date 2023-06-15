@@ -43,7 +43,7 @@ class _ImageBoxState extends State<ImageBox> {
             height: 10,
           ),
           Text(
-            '${'Confidence: ${widget.confidence * 100}'.substring(0, 17)}%',
+            '${'Confidence: ${widget.confidence * 100}'.substring(0, 16)}%',
             style: Styles.textStyle18,
           ),
           const SizedBox(
