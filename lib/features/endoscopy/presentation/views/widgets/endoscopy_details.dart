@@ -15,7 +15,6 @@ import '../../../../../constants.dart';
 import '../../../../../core/utlis/styles.dart';
 import '../../../../../core/widgets/custom_alert.dart';
 import '../../../../../core/widgets/custom_button.dart';
-import '../../../../../core/widgets/custom_loading_indicator.dart';
 
 class EndoscopyDetails extends StatefulWidget {
   const EndoscopyDetails({super.key});
@@ -27,6 +26,8 @@ class EndoscopyDetails extends StatefulWidget {
 
 class _EndoscopyDetailsState extends State<EndoscopyDetails> {
   String error = '';
+  bool timeout = false;
+
   bool loading = false;
   int clas = 0;
   double confidence = 0;
@@ -57,6 +58,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
       final response = await request.send();
 
       if (response.statusCode == 200) {
+        timeout = false;
         final responseData = await response.stream.toBytes();
         final jsonResponse = jsonDecode(utf8.decode(responseData));
 
@@ -76,6 +78,26 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
         }
       }
     } catch (e) {
+      setState(() {
+        timeout = true;
+      });
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Connection Timed out'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
       if (kDebugMode) {
         print('Caught error: $e');
       }
@@ -87,143 +109,145 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
   Future<void> adenoOrHyper(File imageFile) async {
     await uploadImage(imageFile);
     if (error == '') {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Predicted $toImage'.split(":")[0]),
-            content: const Text('Do you want to Proceed to polyp detection?'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(context);
-                },
-                child: const Text(
-                  'NO',
-                  style: TextStyle(color: Colors.red),
+      if (timeout == false) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Predicted $toImage'.split(":")[0]),
+              content: const Text('Do you want to Proceed to polyp detection?'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(context);
+                  },
+                  child: const Text(
+                    'NO',
+                    style: TextStyle(color: Colors.red),
+                  ),
                 ),
-              ),
-              TextButton(
-                child: const Text("YES"),
-                onPressed: () async {
-                  if (labelBinary == '0') {
-                    final url = Uri.parse('http://10.0.2.2:5000/hyper');
-                    final request = http.MultipartRequest('POST', url);
-                    request.headers['Connection'] =
-                        'keep-alive'; // Add keep-alive header
-                    request.files.add(await http.MultipartFile.fromPath(
-                      'image',
-                      imageFile.path,
-                    ));
+                TextButton(
+                  child: const Text("YES"),
+                  onPressed: () async {
+                    if (labelBinary == '0') {
+                      final url = Uri.parse('http://10.0.2.2:5000/hyper');
+                      final request = http.MultipartRequest('POST', url);
+                      request.headers['Connection'] =
+                          'keep-alive'; // Add keep-alive header
+                      request.files.add(await http.MultipartFile.fromPath(
+                        'image',
+                        imageFile.path,
+                      ));
 
-                    final response = await request.send();
+                      final response = await request.send();
 
-                    if (response.statusCode == 200) {
-                      final responseData = await response.stream.toBytes();
-                      final jsonResponse =
-                          jsonDecode(utf8.decode(responseData));
+                      if (response.statusCode == 200) {
+                        final responseData = await response.stream.toBytes();
+                        final jsonResponse =
+                            jsonDecode(utf8.decode(responseData));
 
-                      List<dynamic> data = jsonResponse;
-                      setState(() {
-                        confidence = data[0]['conf'] ?? 0;
-                        name = data[0]['class_name'] ?? '';
-                        xmax = data[0]['bbox_list'][0] ?? 0;
-                        ymax = data[0]['bbox_list'][1] ?? 0;
-                        xmin = data[0]['bbox_list'][2] ?? 0;
-                        ymin = data[0]['bbox_list'][3] ?? 0;
-                      });
-                      if (kDebugMode) {
-                        print(xmax);
-                        print(ymax);
-                        print(xmin);
-                        print(ymin);
-                        print(name);
-                        print(confidence);
-                      }
+                        List<dynamic> data = jsonResponse;
+                        setState(() {
+                          confidence = data[0]['conf'] ?? 0;
+                          name = data[0]['class_name'] ?? '';
+                          xmax = data[0]['bbox_list'][0] ?? 0;
+                          ymax = data[0]['bbox_list'][1] ?? 0;
+                          xmin = data[0]['bbox_list'][2] ?? 0;
+                          ymin = data[0]['bbox_list'][3] ?? 0;
+                        });
+                        if (kDebugMode) {
+                          print(xmax);
+                          print(ymax);
+                          print(xmin);
+                          print(ymin);
+                          print(name);
+                          print(confidence);
+                        }
 
-                      Rect rect = Rect.fromPoints(
-                          Offset(xmin, ymin), Offset(xmax, ymax));
+                        Rect rect = Rect.fromPoints(
+                            Offset(xmin, ymin), Offset(xmax, ymax));
 
-                      await Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ImageBox(
-                            clss: name.toString(),
-                            confidence: confidence,
-                            imagePath: imageEndoscopy!,
-                            rect: rect,
+                        await Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ImageBox(
+                              clss: name.toString(),
+                              confidence: confidence,
+                              imagePath: imageEndoscopy!,
+                              rect: rect,
+                            ),
                           ),
-                        ),
-                      );
-                      reset();
-                    } else {
-                      if (kDebugMode) {
-                        print(
-                            'Image upload failed with status ${response.statusCode}');
+                        );
+                        reset();
+                      } else {
+                        if (kDebugMode) {
+                          print(
+                              'Image upload failed with status ${response.statusCode}');
+                        }
+                      }
+                    } else if (labelBinary == '1') {
+                      final url = Uri.parse('http://10.0.2.2:5000/adeno');
+                      final request = http.MultipartRequest('POST', url);
+                      request.headers['Connection'] =
+                          'keep-alive'; // Add keep-alive header
+                      request.files.add(await http.MultipartFile.fromPath(
+                        'image',
+                        imageFile.path,
+                      ));
+
+                      final response = await request.send();
+
+                      if (response.statusCode == 200) {
+                        final responseData = await response.stream.toBytes();
+                        final jsonResponse =
+                            jsonDecode(utf8.decode(responseData));
+
+                        List<dynamic> data = jsonResponse;
+                        setState(() {
+                          confidence = data[0]['conf'] ?? 0;
+                          name = data[0]['class_name'] ?? '';
+                          xmax = data[0]['bbox_list'][0] ?? 0;
+                          ymax = data[0]['bbox_list'][1] ?? 0;
+                          xmin = data[0]['bbox_list'][2] ?? 0;
+                          ymin = data[0]['bbox_list'][3] ?? 0;
+                        });
+                        if (kDebugMode) {
+                          print(xmax);
+                          print(ymax);
+                          print(xmin);
+                          print(ymin);
+                          print(name);
+                          print(confidence);
+                        }
+                        Rect rect = Rect.fromPoints(
+                            Offset(xmin, ymin), Offset(xmax, ymax));
+
+                        await Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ImageBox(
+                              clss: name.toString(),
+                              confidence: confidence,
+                              imagePath: imageEndoscopy!,
+                              rect: rect,
+                            ),
+                          ),
+                        );
+                        reset();
+                      } else {
+                        if (kDebugMode) {
+                          print(
+                              'Image upload failed with status ${response.statusCode}');
+                        }
                       }
                     }
-                  } else if (labelBinary == '1') {
-                    final url = Uri.parse('http://10.0.2.2:5000/adeno');
-                    final request = http.MultipartRequest('POST', url);
-                    request.headers['Connection'] =
-                        'keep-alive'; // Add keep-alive header
-                    request.files.add(await http.MultipartFile.fromPath(
-                      'image',
-                      imageFile.path,
-                    ));
-
-                    final response = await request.send();
-
-                    if (response.statusCode == 200) {
-                      final responseData = await response.stream.toBytes();
-                      final jsonResponse =
-                          jsonDecode(utf8.decode(responseData));
-
-                      List<dynamic> data = jsonResponse;
-                      setState(() {
-                        confidence = data[0]['conf'] ?? 0;
-                        name = data[0]['class_name'] ?? '';
-                        xmax = data[0]['bbox_list'][0] ?? 0;
-                        ymax = data[0]['bbox_list'][1] ?? 0;
-                        xmin = data[0]['bbox_list'][2] ?? 0;
-                        ymin = data[0]['bbox_list'][3] ?? 0;
-                      });
-                      if (kDebugMode) {
-                        print(xmax);
-                        print(ymax);
-                        print(xmin);
-                        print(ymin);
-                        print(name);
-                        print(confidence);
-                      }
-                      Rect rect = Rect.fromPoints(
-                          Offset(xmin, ymin), Offset(xmax, ymax));
-
-                      await Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ImageBox(
-                            clss: name.toString(),
-                            confidence: confidence,
-                            imagePath: imageEndoscopy!,
-                            rect: rect,
-                          ),
-                        ),
-                      );
-                      reset();
-                    } else {
-                      if (kDebugMode) {
-                        print(
-                            'Image upload failed with status ${response.statusCode}');
-                      }
-                    }
-                  }
-                },
-              ),
-            ],
-          );
-        },
-      );
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
 
@@ -386,35 +410,55 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                             },
                           ),
                         ),
-                        const SizedBox(width: 20.0),
-                        loading == true
-                            ? const Center(child: CustomLoadingIndicator())
-                            : Expanded(
-                                child: CustomButton(
-                                  backgroundColor: kButtonColor,
-                                  text: 'Submit'.toUpperCase(),
-                                  textColor: Colors.white,
-                                  onPressed: () async {
-                                    if (imageEndoscopy != null) {
-                                      await addphoto(
-                                        imageEndoscopy!,
-                                      );
-                                      if (error == '') {}
-                                    } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return const CustomAlert(
-                                            title: 'Endoscopy',
-                                            content:
-                                                'Please Upload Image First.',
-                                          );
-                                        },
-                                      );
-                                    }
-                                  },
+                        if (imageEndoscopy != null) const SizedBox(width: 20.0),
+                        if (imageEndoscopy != null)
+                          loading == true
+                              ? Column(
+                                  children: const [
+                                    Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.green,
+                                        strokeWidth: 13.0,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      'Processing',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    )
+                                  ],
+                                )
+                              : Expanded(
+                                  child: CustomButton(
+                                    backgroundColor: Colors.green,
+                                    text: 'Submit'.toUpperCase(),
+                                    textColor: Colors.white,
+                                    onPressed: () async {
+                                      if (imageEndoscopy != null) {
+                                        await addphoto(
+                                          imageEndoscopy!,
+                                        );
+                                        if (error == '') {}
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return const CustomAlert(
+                                              title: 'Endoscopy',
+                                              content:
+                                                  'Please Upload Image First.',
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
+                                  ),
                                 ),
-                              ),
                       ],
                     ),
                   ],
@@ -440,6 +484,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
       name = '';
       toImage = '';
       labelBinary = '';
+      loading = false;
     });
   }
 

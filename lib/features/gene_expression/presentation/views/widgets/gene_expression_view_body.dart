@@ -7,30 +7,38 @@ import '../../../../../core/utlis/styles.dart';
 import '../../../../../responsive.dart';
 import 'gene_expression_details.dart';
 
-
 class GeneExpressionViewBody extends StatelessWidget {
   const GeneExpressionViewBody({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            if (!Responsive.isDesktop(context))
-              IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: context.read<MenuAppController>().controlMenu,
+        appBar: AppBar(
+          title: Row(
+            children: [
+              if (!Responsive.isDesktop(context))
+                IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: context.read<MenuAppController>().controlMenu,
+                ),
+              // if (!Responsive.isMobile(context))
+              Text(
+                "Gene Expression",
+                style: Styles.textStyle20.copyWith(color: kTextColor),
               ),
-            // if (!Responsive.isMobile(context))
-            Text(
-              "Gene Expression",
-              style: Styles.textStyle20.copyWith(color: kTextColor),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      body: const GeneDetails(),
-    );
+        body: Stack(
+          children: [
+            Image.asset(
+              fit: BoxFit.fitWidth,
+              width: double.infinity,
+              height: double.infinity,
+              'assets/images/Dna_page.png',
+            ),
+            const GeneDetails(),
+          ],
+        ));
   }
 }

@@ -30,27 +30,29 @@ class _ImageBoxState extends State<ImageBox> {
       appBar: AppBar(
         title: const Text('Result'),
       ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Text(
-            'Class: ${widget.clss}',
-            style: Styles.textStyle18,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            '${'Confidence: ${widget.confidence * 100}'.substring(0, 16)}%',
-            style: Styles.textStyle18,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          imageAfterPredict(),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+              'Class: ${widget.clss}',
+              style: Styles.textStyle18,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              '${'Confidence: ${widget.confidence * 100}'.substring(0, 16)}%',
+              style: Styles.textStyle18,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            imageAfterPredict(),
+          ],
+        ),
       ),
     );
   }
@@ -61,8 +63,8 @@ class _ImageBoxState extends State<ImageBox> {
         children: [
           Image.file(
             widget.imagePath,
-            width: 350,
-            height: 350,
+            width: 390,
+            height: 390,
             fit: BoxFit.fill,
           ),
           CustomPaint(

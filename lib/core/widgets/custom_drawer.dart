@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, unused_element
 
+import 'package:colon_app/constants.dart';
 import 'package:colon_app/core/widgets/user_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -82,7 +83,12 @@ class _MyDrawerState extends State<MyDrawer> {
             title: const Text('Diagnosis'),
             children: [
               ListTile(
-                leading: const Icon(Icons.document_scanner_outlined),
+                leading: Image.asset(
+                  'assets/images/endoscopic-icon.png',
+                  height: 35,
+                  width: 35,
+                  // color: _endoscopySelected ? kButtonColor : Colors.white,
+                ),
                 title: const Text('Endoscopy'),
                 selected: _endoscopySelected,
                 onTap: () {
@@ -101,7 +107,12 @@ class _MyDrawerState extends State<MyDrawer> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.document_scanner_outlined),
+                leading: Image.asset(
+                  'assets/images/hitso.png',
+                  height: 30,
+                  width: 30,
+                  color: _histopathologySelected ? kButtonColor : Colors.black,
+                ),
                 title: const Text('Histopathology'),
                 selected: _histopathologySelected,
                 onTap: () {
@@ -120,7 +131,12 @@ class _MyDrawerState extends State<MyDrawer> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.numbers),
+                leading: Image.asset(
+                  'assets/images/gene.png',
+                  height: 30,
+                  width: 30,
+                  color: _geneExpressionSelected ? kButtonColor : Colors.black,
+                ),
                 title: const Text('Gene Expression'),
                 selected: _geneExpressionSelected,
                 onTap: () {

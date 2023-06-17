@@ -9,8 +9,6 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as p;
 
-import 'package:colon_app/core/widgets/custom_loading_indicator.dart';
-
 import '../../../../../constants.dart';
 import '../../../../../core/utlis/styles.dart';
 import '../../../../../core/widgets/custom_alert.dart';
@@ -26,6 +24,7 @@ class HistopathologyDetails extends StatefulWidget {
 class _HistopathologyDetailsState extends State<HistopathologyDetails> {
   String result = '';
   bool loading = false;
+  bool timeout = false;
 
   String removeDoubleQuotes(String input) {
     return input.replaceAll('"', '');
@@ -42,6 +41,7 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
       var response = await request.send();
 
       if (response.statusCode == 200) {
+        timeout = false;
         var responseData = await response.stream.bytesToString();
 
         if (kDebugMode) print('Image uploaded successfully');
@@ -54,6 +54,26 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
         }
       }
     } on Exception catch (e) {
+      setState(() {
+        timeout = true;
+      });
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Connection Timed out'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
       if (kDebugMode) print('Caught error: $e');
     }
   }
@@ -196,34 +216,56 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
                           },
                         ),
                       ),
-                      const SizedBox(width: 20.0),
-                      loading == true
-                          ? const Center(child: CustomLoadingIndicator())
-                          : Expanded(
-                              child: CustomButton(
-                                backgroundColor: kButtonColor,
-                                text: 'Submit'.toUpperCase(),
-                                textColor: Colors.white,
-                                onPressed: () async {
-                                  if (result == '' &&
-                                      imageHistopathology != null) {
-                                    await loadImage(
-                                      imageHistopathology!,
-                                    );
-                                  } else {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return const CustomAlert(
-                                          title: 'Histopathology',
-                                          content: 'Please Upload Image First.',
-                                        );
-                                      },
-                                    );
-                                  }
-                                },
+                      if (imageHistopathology != null)
+                        const SizedBox(width: 20.0),
+                      if (imageHistopathology != null)
+                        loading == true
+                            ? Column(
+                                children: const [
+                                  Center(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.green,
+                                      strokeWidth: 13.0,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    'Processing',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  )
+                                ],
+                              )
+                            : Expanded(
+                                child: CustomButton(
+                                  backgroundColor: Colors.green,
+                                  text: 'Submit'.toUpperCase(),
+                                  textColor: Colors.white,
+                                  onPressed: () async {
+                                    if (result == '' &&
+                                        imageHistopathology != null) {
+                                      await loadImage(
+                                        imageHistopathology!,
+                                      );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return const CustomAlert(
+                                            title: 'Histopathology',
+                                            content:
+                                                'Please Upload Image First.',
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                ),
                               ),
-                            ),
                     ],
                   ),
                 ],

@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:math';
+
 import 'package:colon_app/core/widgets/custom_button.dart';
 import 'package:colon_app/core/widgets/custom_loading_indicator.dart';
 import 'package:flutter/material.dart';
@@ -163,6 +165,12 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
         }
         final data = snapshot.data!;
 
+        var dataLength = data.length;
+        var startingIndex = max(
+            0,
+            dataLength -
+                5); // Start from the last five values or from the beginning if the array length is less than five
+
         List<LineSeries<TumorData, String>> tumorData = [];
 
         final texts = ['cea', 'ca19', 'ca50', 'ca24', 'afp'];
@@ -178,7 +186,7 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
         for (var j = 0; j < tumorMarkersData.length; j++) {
           final tumorMarkerData = <TumorData>[];
 
-          for (var i = 0; i < data.length; i++) {
+          for (var i = startingIndex; i < data.length; i++) {
             final tumorDataPoints =
                 TumorData(data[i]['submit_date'], data[i][tumorMarkersData[j]]);
             tumorMarkerData.add(tumorDataPoints);

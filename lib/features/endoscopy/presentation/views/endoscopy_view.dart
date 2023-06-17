@@ -1,10 +1,10 @@
+import 'package:colon_app/features/endoscopy/presentation/views/widgets/endoscopy_view_body.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../controllers/menu_app_controller.dart';
 import '../../../../core/widgets/custom_drawer.dart';
 import '../../../../responsive.dart';
-import 'widgets/endoscopy_view_body.dart';
 
 class EndoscopyView extends StatelessWidget {
   const EndoscopyView({super.key});

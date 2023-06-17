@@ -3,12 +3,10 @@
 import 'dart:convert';
 
 import 'package:colon_app/core/utlis/functions/launch_url.dart';
-import 'package:colon_app/core/widgets/custom_loading_indicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../../../constants.dart';
 import '../../../../../core/utlis/styles.dart';
 import '../../../../../core/widgets/custom_button.dart';
 import 'package:http/http.dart' as http;
@@ -49,32 +47,54 @@ class _GeneDetailsState extends State<GeneDetails> {
     final response =
         await http.post(url, headers: header, body: jsonEncode(body));
     final data = jsonDecode(response.body);
-    if (response.statusCode == 200) {
-      if (kDebugMode) {
-        print(data);
+
+    try {
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          print(data);
+        }
+        setState(() {
+          geneName = data[0]['gene_name'] ?? '';
+          ccsid = data[0]['ccs_id'] ?? '';
+          geneType = data[0]['gene_type'] ?? '';
+          geneUrl = data[0]['gene_url'] ?? '';
+          originalGene = data[0]['original_gene'] ?? '';
+          lines = data[0]['lines'] ?? '';
+          targetGene = data[0]['target_gene'] ?? '';
+          finalScore = data[0]['final_score'] ?? '';
+          maxScore = data[0]['max_score'] ?? '';
+          matchScore = data[0]['match_score'] ?? '';
+          mismatchScore = data[0]['mismatch_score'] ?? '';
+          gapOpeningScore = data[0]['gap_opening_score'] ?? '';
+          gapExtensionScore = data[0]['gap_extension_score'] ?? '';
+          seqError = data[0]['error'] ?? '';
+          mutationType = data[0]['Mutation_Type'] ?? '';
+        });
+      } else {
+        if (kDebugMode) {
+          print('error');
+        }
       }
-      setState(() {
-        geneName = data[0]['gene_name'] ?? '';
-        ccsid = data[0]['ccs_id'] ?? '';
-        geneType = data[0]['gene_type'] ?? '';
-        geneUrl = data[0]['gene_url'] ?? '';
-        originalGene = data[0]['original_gene'] ?? '';
-        lines = data[0]['lines'] ?? '';
-        targetGene = data[0]['target_gene'] ?? '';
-        finalScore = data[0]['final_score'] ?? '';
-        maxScore = data[0]['max_score'] ?? '';
-        matchScore = data[0]['match_score'] ?? '';
-        mismatchScore = data[0]['mismatch_score'] ?? '';
-        gapOpeningScore = data[0]['gap_opening_score'] ?? '';
-        gapExtensionScore = data[0]['gap_extension_score'] ?? '';
-        seqError = data[0]['error'] ?? '';
-        mutationType = data[0]['Mutation_Type'] ?? '';
-      });
-    } else {
-      if (kDebugMode) {
-        print('error');
-      }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Connection Timed out'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
+
     return data;
   }
 
@@ -168,13 +188,30 @@ class _GeneDetailsState extends State<GeneDetails> {
                           ),
                           const SizedBox(width: 10),
                           if (loading == true)
-                            const Center(
-                              child: CustomLoadingIndicator(),
+                            Column(
+                              children: const [
+                                Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.green,
+                                    strokeWidth: 13.0,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  'Processing',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                )
+                              ],
                             )
                           else
                             Expanded(
                               child: CustomButton(
-                                backgroundColor: kButtonColor,
+                                backgroundColor: Colors.green,
                                 textColor: Colors.white,
                                 text: 'Submit'.toUpperCase(),
                                 onPressed: () async {
