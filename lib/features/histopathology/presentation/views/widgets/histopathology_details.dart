@@ -111,7 +111,7 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
           context: context,
           builder: (_) => AlertDialog(
             title: const Text('Invalid Image type'),
-            content: const Text('Selected file is not a PNG or JPG.'),
+            content: const Text('Selected file is not a PNG or JPG or JPEG.'),
             actions: [
               TextButton(
                   onPressed: () {
@@ -159,7 +159,7 @@ class _HistopathologyDetailsState extends State<HistopathologyDetails> {
                         child: Opacity(
                           opacity: 0.7,
                           child: Text(
-                            'Upload Histopathological images here',
+                            'Upload Histopathological (PNG,JPG,JPEG) images here',
                             style: Styles.textStyle25,
                           ),
                         ),

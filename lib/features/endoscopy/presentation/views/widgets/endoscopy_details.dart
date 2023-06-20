@@ -293,7 +293,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
           context: context,
           builder: (_) => AlertDialog(
             title: const Text('Invalid Image type'),
-            content: const Text('Selected file is not a PNG or JPG.'),
+            content: const Text('Selected file is not a PNG or JPG or JPEG.'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
@@ -340,7 +340,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                           child: Opacity(
                             opacity: 0.7,
                             child: Text(
-                              'Upload Endoscopic images here',
+                              'Upload Endoscopic (PNG,JPG,JPEG) images here',
                               style: Styles.textStyle25,
                             ),
                           ),
@@ -363,6 +363,7 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                       ],
                     ),
                     const SizedBox(height: 25),
+
                     if (imageEndoscopy != null)
                       Stack(
                         children: [
@@ -387,12 +388,13 @@ class _EndoscopyDetailsState extends State<EndoscopyDetails> {
                       const SizedBox(
                         height: 10,
                       ),
-                    Text(
-                      error,
-                      style: Styles.textStyle20,
-                    ),
+                    if (error != '')
+                      Text(
+                        '$error. \nPlease select an Endoscopic image and try again.',
+                        style: Styles.textStyle20,
+                      ),
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
                     // const SizedBox(height: 15),
                     Row(
